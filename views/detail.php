@@ -13,7 +13,6 @@ $relatedItems=array_values(array_filter($related['items'],fn($relatedItem)=>(int
 <div class="repair-detail-layout">
  <article class="repair-information">
   <header class="repair-information-header"><h1><?= e($item['title']) ?></h1><div class="repair-information-meta"><span><?= listingType($item['type']) ?></span><span>信息编号：<?= (int)$item['id'] ?></span><span>发布时间：<time datetime="<?= e(date(DATE_ATOM,strtotime($item['created_at']))) ?>"><?= e($item['created_at']) ?></time></span><span>更新时间：<time datetime="<?= e(date(DATE_ATOM,strtotime($item['updated_at']))) ?>"><?= e(substr($item['updated_at'],0,10)) ?></time></span></div></header>
-  <?php if($item['is_demo']): ?><p class="repair-demo-note">本地测试信息：内容、联系人和号码仅供展示，不代表真实商家，不提供真实维修服务。</p><?php endif ?>
   <section class="repair-basic" aria-labelledby="repair-basic-title"><h2 id="repair-basic-title" class="sr-only">基本信息与联系方式</h2><dl class="repair-facts">
    <div><dt>联系人：</dt><dd><?= e($item['contact']) ?><?php require ROOT.'/views/verification-badge.php'; ?></dd></div>
    <div><dt>联系电话：</dt><dd><?= $phoneMarkup('repair-primary-phone') ?></dd></div>

@@ -30,7 +30,7 @@ for sample in data['samples']:
     check(any(card.select_one('.demo-label') and card.select_one('.demo-label').get_text()=='测试信息' for card in cards),'Generated cards have a visible test label: '+sample['city'])
     item=sample['items'][0]; response,soup=get(item['url'])
     check(soup.h1.get_text()==item['title'] and item['phone'] in soup.get_text() and item['contact'] in soup.get_text(),'Detail retains the generated title/contact/number')
-    check(soup.select_one('.repair-demo-note') and '本地测试信息' in soup.select_one('.repair-demo-note').get_text(),'Detail explicitly identifies local test information')
+    check(soup.select_one('.repair-demo-note') is None,'Detail omits the removed demo disclaimer')
     check(not soup.select('a[href^="tel:"]'),'Random test numbers are displayed without real dial links')
     check('noindex' in soup.select_one('meta[name="robots"]')['content'],'Generated detail pages remain excluded from indexing')
     check(not soup.select('.listing-verification'),'No fabricated identity badge appears on generated records')
