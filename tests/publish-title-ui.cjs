@@ -1,0 +1,68 @@
+const {chromium}=require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const fs=require('fs'),assert=require('assert'),base='http://www.xiu.cn',out='tests/artifacts/';
+const token='xiuqa_'+Date.now(),username=token+'_title',password='QATitle2026',checks=[];
+const fixtures={token,users:[username],listings:[],articles:[],categories:[],cities:[],districts:[]};fs.writeFileSync(out+'fixtures.json',JSON.stringify(fixtures));
+const pass=(value,label)=>{assert(value,label);checks.push(label);console.log('PASS',label);};
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
+ try{
+  const context=await browser.newContext(),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(base+'/zhu-ce/');await page.getByLabel('账号',{exact:true}).fill(username);await page.getByLabel('密码',{exact:true}).fill(password);await page.getByLabel('确认密码',{exact:true}).fill(password);
+  await Promise.all([page.waitForURL('**/yong-hu-zhong-xin/'),page.getByRole('button',{name:'注册并登录',exact:true}).click()]);
+  await page.goto(base+'/fa-bu-xin-xi/');const title=page.locator('#listing-title'),choose=id=>page.locator('[data-publish-category-id="'+id+'"]'),next=page.getByRole('button',{name:'下一步',exact:true}),use=page.getByRole('button',{name:'使用建议标题',exact:true});
+  await choose('1').click();await choose('2').click();await next.click();
+  pass(await title.inputValue()==='','No fabricated city when city is not selected');
+  await page.locator('#listing-province').selectOption('广东省');await page.locator('#listing-city').selectOption('3');
+  pass(await title.inputValue()==='广州家电厨电维修空调维修','Selected city and both category levels automatically fill title');
+  await page.locator('#listing-city').selectOption('4');pass((await title.inputValue()).startsWith('深圳'),'Automatic title updates when city changes');
+  await page.getByRole('button',{name:'重新选择分类',exact:true}).click();await choose('3').click();await next.click();
+  pass(await title.inputValue()==='深圳家电厨电维修空调维修家用空调','Automatic title includes third level when selected');
+  const address=page.locator('#listing-address');
+  await address.fill('北湖区 · 人民路 88号（2楼）');
+  pass(await title.inputValue()==='深圳北湖区人民路88号2楼家电厨电维修空调维修家用空调','Service address joins city and full category path without punctuation or spaces');
+  await address.fill('人民路 99号 / A-2室 #🔧');
+  pass(await title.inputValue()==='深圳人民路99号A2室家电厨电维修空调维修家用空调','Address changes update title while retaining Chinese letters and digits');
+  pass(!/[^\p{L}\p{N}]/u.test(await title.inputValue()),'Generated title contains no whitespace or special symbols');
+  await address.fill('维护地址'.repeat(60));
+  pass((await title.inputValue()).length<=120&&(await title.inputValue()).endsWith('家电厨电维修空调维修家用空调'),'Long address respects title limit and retains category path');
+  await address.fill('');pass(await title.inputValue()==='深圳家电厨电维修空调维修家用空调','Clearing address removes previous address from automatic title');
+  await title.fill('自定义标题：空调上门维修与保养');await page.locator('#listing-city').selectOption('3');
+  pass(await title.inputValue()==='自定义标题：空调上门维修与保养','City change preserves manually written title');
+  await address.fill('天河区 / 中山路-10号');pass(await title.inputValue()==='自定义标题：空调上门维修与保养','Address changes preserve manually written title');
+  pass((await page.locator('[data-title-help]').innerText()).includes('广州天河区中山路10号家电厨电维修空调维修家用空调'),'Manual title suggestion also includes cleaned service address');
+  await address.fill('');
+  await page.getByRole('button',{name:'重新选择分类',exact:true}).click();await choose('2').click();await next.click();
+  pass(await title.inputValue()==='自定义标题：空调上门维修与保养','Category change preserves manually written title');
+  pass(await use.isVisible()&&(await page.locator('[data-title-help]').innerText()).includes('广州家电厨电维修空调维修'),'Manual title displays current suggestion and restore action');
+  await use.click();pass(await title.inputValue()==='广州家电厨电维修空调维修','Restore suggestion fills current city and category');
+  await page.locator('#listing-city').selectOption('4');pass((await title.inputValue()).startsWith('深圳'),'Restored title resumes automatic updates');
+  await page.locator('#listing-province').selectOption('浙江省');pass(await title.inputValue()==='','Province change removes stale city from automatic title');
+  await page.locator('#listing-city').selectOption('6');pass((await title.inputValue()).startsWith('杭州'),'Selecting new province city rebuilds automatic title');
+  await title.fill('自定义标题：维修设备请联系我');await page.locator('#listing-province').selectOption('广东省');
+  pass(await title.inputValue()==='自定义标题：维修设备请联系我','Province change also preserves manual title');
+  await page.locator('#listing-city').selectOption('3');await title.fill('');await page.locator('#listing-city').selectOption('4');
+  pass(await title.inputValue()==='深圳家电厨电维修空调维修','Empty title resumes autofill on selection change');
+  await page.locator('[name=type][value=request]').check();pass(await title.inputValue()==='深圳家电厨电维修空调维修','Request publication supports same city category title');
+  await page.locator('[name=type][value=service]').check();
+  await address.fill('北湖区 · 人民路 88号（2楼）');
+  for(const width of [1440,390,320]){
+   await page.setViewportSize({width,height:900});await title.scrollIntoViewIfNeeded();
+   pass(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'No page overflow at '+width);
+   pass(await page.locator('.publish-title-help').evaluate(node=>node.scrollWidth<=node.clientWidth+1),'Title help fits at '+width);
+   await page.screenshot({path:out+'publish-title-'+width+'.png'});
+  }
+  await page.locator('[name=contact]').fill('演示联系人');await page.locator('[name=phone]').fill('00000000000');await page.locator('[name=body]').fill(token+' 仅用于自动标题验证的模拟信息，不提供实际服务。');
+  const generated=await title.inputValue();await Promise.all([page.waitForURL('**/yong-hu-zhong-xin/'),page.getByRole('button',{name:'提交审核',exact:true}).click()]);
+  const id=Number(await page.locator('.account-row').first().getAttribute('data-listing-id'));fixtures.listings.push(id);fs.writeFileSync(out+'fixtures.json',JSON.stringify(fixtures));
+  pass((await page.locator('.account-row').first().innerText()).includes(generated),'Generated title persists through actual submission');
+  await page.goto(base+'/fa-bu-xin-xi/?id='+id);pass(await title.inputValue()===generated,'Editing retains saved title');
+  pass(await address.inputValue()==='北湖区 · 人民路 88号（2楼）','Original address retains its punctuation in saved address field');
+  await page.locator('#listing-city').selectOption('3');pass(await title.inputValue()===generated,'Editing region does not overwrite existing saved title');
+  await use.click();pass((await title.inputValue()).startsWith('广州'),'Editing can explicitly apply a new suggestion');
+  const csrf=await page.locator('.publish-wizard [name=csrf]').inputValue(),failedTitle='验证失败仍保留手动填写的标题';
+  const response=await context.request.post(base+'/fa-bu-xin-xi/',{form:{csrf,id,type:'service',title:failedTitle,category_id:2,province:'广东省',city_id:3,district_id:0,address:'QA synthetic address',contact:'演示联系人',phone:'invalid',body:'仅用于自动标题失败回填验证的模拟信息。'}});
+  const body=await response.body();await page.route('**/fa-bu-xin-xi/?qa-title-failure=1',route=>route.fulfill({status:response.status(),body,contentType:'text/html; charset=utf-8'}));
+  await page.goto(base+'/fa-bu-xin-xi/?qa-title-failure=1');pass(await title.inputValue()===failedTitle,'Validation failure retains submitted manual title');await page.locator('#listing-city').selectOption('4');pass(await title.inputValue()===failedTitle,'Failed form keeps manual title when city changes');
+  pass(errors.length===0,'No browser script errors');fs.writeFileSync(out+'publish-title-ui-results.json',JSON.stringify({passed:checks.length,checks},null,2));console.log('SUCCESS',checks.length,'title autofill checks');
+ }finally{await browser.close();}
+})().catch(error=>{console.error(error);process.exit(1);});

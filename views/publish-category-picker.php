@@ -1,0 +1,10 @@
+<?php $publishCategories=categories(); $publishCategoryMap=array_column($publishCategories,null,'id'); $currentPublishCategory=$publishCategoryMap[(int)$value('category_id',0)]??null; ?>
+<section class="panel publish-category-picker" id="publish-category-picker" data-open-details="<?= ($item || $_SERVER['REQUEST_METHOD']==='POST') && $currentPublishCategory?'1':'0' ?>" data-original-category="<?= (int)($item['category_id']??0) ?>" aria-labelledby="publish-category-heading">
+ <div class="publish-category-heading"><h2 id="publish-category-heading">选择行业</h2><p>先选择一级大类，再选择对应的二级分类。</p></div>
+ <label class="publish-category-fallback">维修分类<select name="category_id" id="listing-category" aria-label="维修分类" required><option value="">请选择分类</option><?php foreach($publishCategories as $category): ?><option value="<?= (int)$category['id'] ?>" data-parent="<?= (int)$category['parent_id'] ?>" data-depth="<?= (int)$category['depth'] ?>" data-name="<?= e($category['name']) ?>" <?= (int)$value('category_id')===(int)$category['id']?'selected':'' ?>><?= e($category['label']) ?></option><?php endforeach ?></select></label>
+ <div class="publish-category-level" data-publish-category-level="1" hidden><h3><span aria-hidden="true">*</span> 选择一级大类</h3><div class="publish-category-grid"></div></div>
+ <div class="publish-category-level" data-publish-category-level="2" hidden><h3><span aria-hidden="true">*</span> 选择二级分类</h3><div class="publish-category-grid"></div><p class="publish-category-empty">请先选择一级大类。</p></div>
+ <div class="publish-category-level" data-publish-category-level="3" hidden><h3>选择三级分类 <small>可进一步细分</small></h3><div class="publish-category-grid"></div></div>
+ <div class="publish-category-selection" aria-live="polite" hidden><span>当前选择：</span><strong data-publish-category-path></strong><p class="field-help" data-publish-category-help></p></div>
+ <div class="publish-category-next" hidden><button type="button" class="button" data-publish-category-next disabled>下一步</button></div>
+</section>

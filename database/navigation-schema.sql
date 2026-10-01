@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS xiu_navigation (
+ id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ label VARCHAR(40) NOT NULL, url VARCHAR(1000) NOT NULL,
+ sort_order INT UNSIGNED NOT NULL DEFAULT 0, enabled TINYINT NOT NULL DEFAULT 1,
+ new_tab TINYINT NOT NULL DEFAULT 0, match_mode ENUM('exact','prefix') NOT NULL DEFAULT 'exact',
+ INDEX navigation_order (enabled,sort_order,id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

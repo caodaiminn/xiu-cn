@@ -1,0 +1,8 @@
+<section class="panel admin-form ai-settings"><h2>智谱AI · 发布描述生成</h2><p class="field-help">根据会员填写的信息标题，分别生成维修服务或求修需求描述，生成后会员仍可编辑。调用使用所选模型及您的智谱账户额度。</p>
+<form method="post" class="stack-form"><?= csrfField() ?>
+<div class="form-grid"><label>AI生成功能<select name="enabled"><option value="0" <?= field('enabled',$aiConfig['enabled']?'1':'0')==='0'?'selected':'' ?>>关闭</option><option value="1" <?= field('enabled',$aiConfig['enabled']?'1':'0')==='1'?'selected':'' ?>>开启</option></select></label>
+<label>每位会员每天生成次数<input type="number" name="daily_limit" min="1" max="200" value="<?= e(field('daily_limit',$aiConfig['daily_limit'])) ?>" required><small class="field-help">每分钟最多3次；提交生成请求即计次，防止重复请求。</small></label></div>
+<label>智谱 API Key<input type="password" name="api_key" value="" maxlength="512" autocomplete="new-password" placeholder="<?= $aiConfig['has_key']?'已设置，留空保留原密钥':'填写智谱开放平台 API Key' ?>"><small class="field-help">密钥加密保存在服务器，页面不回显。留空保留已保存密钥。</small></label>
+<div class="form-grid"><label>选择常用模型<select data-ai-model-preset><option value="">自定义模型</option><?php foreach(aiModelPresets() as $id=>$label): ?><option value="<?= e($id) ?>" <?= field('model',$aiConfig['model'])===$id?'selected':'' ?>><?= e($label) ?></option><?php endforeach ?></select></label>
+<label>模型 ID<input name="model" data-ai-model-id value="<?= e(field('model',$aiConfig['model'])) ?>" maxlength="100" pattern="[a-zA-Z0-9][a-zA-Z0-9._-]{0,99}" required><small class="field-help">可直接填写账户支持的模型 ID。模型可用性以智谱账户为准。</small></label></div>
+<div class="form-actions"><button class="button">保存AI设置</button><a class="text-link" href="https://open.bigmodel.cn/" target="_blank" rel="noopener">智谱开放平台</a></div></form></section>

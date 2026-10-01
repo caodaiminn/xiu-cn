@@ -1,0 +1,6 @@
+<div class="admin-listing-controls">
+ <p>共 <strong><?= (int)$result['total'] ?></strong> 条信息 · 第 <?= (int)$result['page'] ?> / <?= (int)$result['pages'] ?> 页</p>
+ <form method="get" action="<?= e(adminUrl()) ?>" class="admin-page-size"><input type="hidden" name="section" value="listings"><?php if($result['status']): ?><input type="hidden" name="status" value="<?= e($result['status']) ?>"><?php endif ?><label>每页<select name="per_page"><?php foreach([20,30,50] as $size): ?><option value="<?= $size ?>" <?= $result['per_page']===$size?'selected':'' ?>><?= $size ?>条</option><?php endforeach ?></select></label><button class="button button-outline small">应用</button></form>
+ <?php pagination($result) ?>
+ <?php if($result['pages']>1): ?><form method="get" action="<?= e(adminUrl()) ?>" class="admin-page-jump"><input type="hidden" name="section" value="listings"><input type="hidden" name="status" value="<?= e($result['status']) ?>"><input type="hidden" name="per_page" value="<?= (int)$result['per_page'] ?>"><label>跳至<input type="number" name="page" value="<?= (int)$result['page'] ?>" min="1" max="<?= (int)$result['pages'] ?>" required aria-label="跳转页码">页</label><button class="button button-outline small">跳转</button></form><?php endif ?>
+</div>

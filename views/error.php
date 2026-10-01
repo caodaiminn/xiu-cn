@@ -1,0 +1,1 @@
+<section class="panel empty-state error-page"><span><?= e($message) ?></span><p>你可以返回首页，或者继续查找分类信息。</p><div class="form-actions"><a class="button" href="/">返回首页</a><a class="button button-outline" href="/fen-lei-xin-xi/">分类信息</a></div></section>

@@ -1,0 +1,2513 @@
+{
+  "sources": [
+    {
+      "url": "https://github.com/modood/Administrative-divisions-of-China",
+      "commit": "c49d495b40ac73eb1a66f6eeae5f8fd10696f035",
+      "data_date": "2023-06-30",
+      "license": "WTFPL"
+    },
+    {
+      "url": "https://www.moi.gov.tw/cp.aspx?n=674",
+      "note": "Taiwan city and county navigation names; Hong Kong and Macao are single service regions."
+    }
+  ],
+  "scope": "Prefecture-level service regions, municipalities, province-administered county-level regions, Taiwan cities/counties, Hong Kong and Macao. Not an exhaustive county/district directory.",
+  "provinces": [
+    {
+      "code": "11",
+      "name": "北京市"
+    },
+    {
+      "code": "12",
+      "name": "天津市"
+    },
+    {
+      "code": "13",
+      "name": "河北省"
+    },
+    {
+      "code": "14",
+      "name": "山西省"
+    },
+    {
+      "code": "15",
+      "name": "内蒙古自治区"
+    },
+    {
+      "code": "21",
+      "name": "辽宁省"
+    },
+    {
+      "code": "22",
+      "name": "吉林省"
+    },
+    {
+      "code": "23",
+      "name": "黑龙江省"
+    },
+    {
+      "code": "31",
+      "name": "上海市"
+    },
+    {
+      "code": "32",
+      "name": "江苏省"
+    },
+    {
+      "code": "33",
+      "name": "浙江省"
+    },
+    {
+      "code": "34",
+      "name": "安徽省"
+    },
+    {
+      "code": "35",
+      "name": "福建省"
+    },
+    {
+      "code": "36",
+      "name": "江西省"
+    },
+    {
+      "code": "37",
+      "name": "山东省"
+    },
+    {
+      "code": "41",
+      "name": "河南省"
+    },
+    {
+      "code": "42",
+      "name": "湖北省"
+    },
+    {
+      "code": "43",
+      "name": "湖南省"
+    },
+    {
+      "code": "44",
+      "name": "广东省"
+    },
+    {
+      "code": "45",
+      "name": "广西壮族自治区"
+    },
+    {
+      "code": "46",
+      "name": "海南省"
+    },
+    {
+      "code": "50",
+      "name": "重庆市"
+    },
+    {
+      "code": "51",
+      "name": "四川省"
+    },
+    {
+      "code": "52",
+      "name": "贵州省"
+    },
+    {
+      "code": "53",
+      "name": "云南省"
+    },
+    {
+      "code": "54",
+      "name": "西藏自治区"
+    },
+    {
+      "code": "61",
+      "name": "陕西省"
+    },
+    {
+      "code": "62",
+      "name": "甘肃省"
+    },
+    {
+      "code": "63",
+      "name": "青海省"
+    },
+    {
+      "code": "64",
+      "name": "宁夏回族自治区"
+    },
+    {
+      "code": "65",
+      "name": "新疆维吾尔自治区"
+    },
+    {
+      "code": "71",
+      "name": "台湾省"
+    },
+    {
+      "code": "81",
+      "name": "香港特别行政区"
+    },
+    {
+      "code": "82",
+      "name": "澳门特别行政区"
+    }
+  ],
+  "cities": [
+    {
+      "code": "1100",
+      "province_code": "11",
+      "province": "北京市",
+      "name": "北京"
+    },
+    {
+      "code": "1200",
+      "province_code": "12",
+      "province": "天津市",
+      "name": "天津"
+    },
+    {
+      "code": "1301",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "石家庄"
+    },
+    {
+      "code": "1302",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "唐山"
+    },
+    {
+      "code": "1303",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "秦皇岛"
+    },
+    {
+      "code": "1304",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "邯郸"
+    },
+    {
+      "code": "1305",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "邢台"
+    },
+    {
+      "code": "1306",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "保定"
+    },
+    {
+      "code": "1307",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "张家口"
+    },
+    {
+      "code": "1308",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "承德"
+    },
+    {
+      "code": "1309",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "沧州"
+    },
+    {
+      "code": "1310",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "廊坊"
+    },
+    {
+      "code": "1311",
+      "province_code": "13",
+      "province": "河北省",
+      "name": "衡水"
+    },
+    {
+      "code": "1401",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "太原"
+    },
+    {
+      "code": "1402",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "大同"
+    },
+    {
+      "code": "1403",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "阳泉"
+    },
+    {
+      "code": "1404",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "长治"
+    },
+    {
+      "code": "1405",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "晋城"
+    },
+    {
+      "code": "1406",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "朔州"
+    },
+    {
+      "code": "1407",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "晋中"
+    },
+    {
+      "code": "1408",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "运城"
+    },
+    {
+      "code": "1409",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "忻州"
+    },
+    {
+      "code": "1410",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "临汾"
+    },
+    {
+      "code": "1411",
+      "province_code": "14",
+      "province": "山西省",
+      "name": "吕梁"
+    },
+    {
+      "code": "1501",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "呼和浩特"
+    },
+    {
+      "code": "1502",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "包头"
+    },
+    {
+      "code": "1503",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "乌海"
+    },
+    {
+      "code": "1504",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "赤峰"
+    },
+    {
+      "code": "1505",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "通辽"
+    },
+    {
+      "code": "1506",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "鄂尔多斯"
+    },
+    {
+      "code": "1507",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "呼伦贝尔"
+    },
+    {
+      "code": "1508",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "巴彦淖尔"
+    },
+    {
+      "code": "1509",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "乌兰察布"
+    },
+    {
+      "code": "1522",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "兴安盟"
+    },
+    {
+      "code": "1525",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "锡林郭勒盟"
+    },
+    {
+      "code": "1529",
+      "province_code": "15",
+      "province": "内蒙古自治区",
+      "name": "阿拉善盟"
+    },
+    {
+      "code": "2101",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "沈阳"
+    },
+    {
+      "code": "2102",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "大连"
+    },
+    {
+      "code": "2103",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "鞍山"
+    },
+    {
+      "code": "2104",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "抚顺"
+    },
+    {
+      "code": "2105",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "本溪"
+    },
+    {
+      "code": "2106",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "丹东"
+    },
+    {
+      "code": "2107",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "锦州"
+    },
+    {
+      "code": "2108",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "营口"
+    },
+    {
+      "code": "2109",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "阜新"
+    },
+    {
+      "code": "2110",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "辽阳"
+    },
+    {
+      "code": "2111",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "盘锦"
+    },
+    {
+      "code": "2112",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "铁岭"
+    },
+    {
+      "code": "2113",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "朝阳"
+    },
+    {
+      "code": "2114",
+      "province_code": "21",
+      "province": "辽宁省",
+      "name": "葫芦岛"
+    },
+    {
+      "code": "2201",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "长春"
+    },
+    {
+      "code": "2202",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "吉林"
+    },
+    {
+      "code": "2203",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "四平"
+    },
+    {
+      "code": "2204",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "辽源"
+    },
+    {
+      "code": "2205",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "通化"
+    },
+    {
+      "code": "2206",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "白山"
+    },
+    {
+      "code": "2207",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "松原"
+    },
+    {
+      "code": "2208",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "白城"
+    },
+    {
+      "code": "2224",
+      "province_code": "22",
+      "province": "吉林省",
+      "name": "延边朝鲜族自治州"
+    },
+    {
+      "code": "2301",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "哈尔滨"
+    },
+    {
+      "code": "2302",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "齐齐哈尔"
+    },
+    {
+      "code": "2303",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "鸡西"
+    },
+    {
+      "code": "2304",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "鹤岗"
+    },
+    {
+      "code": "2305",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "双鸭山"
+    },
+    {
+      "code": "2306",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "大庆"
+    },
+    {
+      "code": "2307",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "伊春"
+    },
+    {
+      "code": "2308",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "佳木斯"
+    },
+    {
+      "code": "2309",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "七台河"
+    },
+    {
+      "code": "2310",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "牡丹江"
+    },
+    {
+      "code": "2311",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "黑河"
+    },
+    {
+      "code": "2312",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "绥化"
+    },
+    {
+      "code": "2327",
+      "province_code": "23",
+      "province": "黑龙江省",
+      "name": "大兴安岭地区"
+    },
+    {
+      "code": "3100",
+      "province_code": "31",
+      "province": "上海市",
+      "name": "上海"
+    },
+    {
+      "code": "3201",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "南京"
+    },
+    {
+      "code": "3202",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "无锡"
+    },
+    {
+      "code": "3203",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "徐州"
+    },
+    {
+      "code": "3204",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "常州"
+    },
+    {
+      "code": "3205",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "苏州"
+    },
+    {
+      "code": "3206",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "南通"
+    },
+    {
+      "code": "3207",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "连云港"
+    },
+    {
+      "code": "3208",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "淮安"
+    },
+    {
+      "code": "3209",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "盐城"
+    },
+    {
+      "code": "3210",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "扬州"
+    },
+    {
+      "code": "3211",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "镇江"
+    },
+    {
+      "code": "3212",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "泰州"
+    },
+    {
+      "code": "3213",
+      "province_code": "32",
+      "province": "江苏省",
+      "name": "宿迁"
+    },
+    {
+      "code": "3301",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "杭州"
+    },
+    {
+      "code": "3302",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "宁波"
+    },
+    {
+      "code": "3303",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "温州"
+    },
+    {
+      "code": "3304",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "嘉兴"
+    },
+    {
+      "code": "3305",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "湖州"
+    },
+    {
+      "code": "3306",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "绍兴"
+    },
+    {
+      "code": "3307",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "金华"
+    },
+    {
+      "code": "3308",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "衢州"
+    },
+    {
+      "code": "3309",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "舟山"
+    },
+    {
+      "code": "3310",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "台州"
+    },
+    {
+      "code": "3311",
+      "province_code": "33",
+      "province": "浙江省",
+      "name": "丽水"
+    },
+    {
+      "code": "3401",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "合肥"
+    },
+    {
+      "code": "3402",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "芜湖"
+    },
+    {
+      "code": "3403",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "蚌埠"
+    },
+    {
+      "code": "3404",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "淮南"
+    },
+    {
+      "code": "3405",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "马鞍山"
+    },
+    {
+      "code": "3406",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "淮北"
+    },
+    {
+      "code": "3407",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "铜陵"
+    },
+    {
+      "code": "3408",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "安庆"
+    },
+    {
+      "code": "3410",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "黄山"
+    },
+    {
+      "code": "3411",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "滁州"
+    },
+    {
+      "code": "3412",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "阜阳"
+    },
+    {
+      "code": "3413",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "宿州"
+    },
+    {
+      "code": "3415",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "六安"
+    },
+    {
+      "code": "3416",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "亳州"
+    },
+    {
+      "code": "3417",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "池州"
+    },
+    {
+      "code": "3418",
+      "province_code": "34",
+      "province": "安徽省",
+      "name": "宣城"
+    },
+    {
+      "code": "3501",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "福州"
+    },
+    {
+      "code": "3502",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "厦门"
+    },
+    {
+      "code": "3503",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "莆田"
+    },
+    {
+      "code": "3504",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "三明"
+    },
+    {
+      "code": "3505",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "泉州"
+    },
+    {
+      "code": "3506",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "漳州"
+    },
+    {
+      "code": "3507",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "南平"
+    },
+    {
+      "code": "3508",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "龙岩"
+    },
+    {
+      "code": "3509",
+      "province_code": "35",
+      "province": "福建省",
+      "name": "宁德"
+    },
+    {
+      "code": "3601",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "南昌"
+    },
+    {
+      "code": "3602",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "景德镇"
+    },
+    {
+      "code": "3603",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "萍乡"
+    },
+    {
+      "code": "3604",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "九江"
+    },
+    {
+      "code": "3605",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "新余"
+    },
+    {
+      "code": "3606",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "鹰潭"
+    },
+    {
+      "code": "3607",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "赣州"
+    },
+    {
+      "code": "3608",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "吉安"
+    },
+    {
+      "code": "3609",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "宜春"
+    },
+    {
+      "code": "3610",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "抚州"
+    },
+    {
+      "code": "3611",
+      "province_code": "36",
+      "province": "江西省",
+      "name": "上饶"
+    },
+    {
+      "code": "3701",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "济南"
+    },
+    {
+      "code": "3702",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "青岛"
+    },
+    {
+      "code": "3703",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "淄博"
+    },
+    {
+      "code": "3704",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "枣庄"
+    },
+    {
+      "code": "3705",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "东营"
+    },
+    {
+      "code": "3706",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "烟台"
+    },
+    {
+      "code": "3707",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "潍坊"
+    },
+    {
+      "code": "3708",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "济宁"
+    },
+    {
+      "code": "3709",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "泰安"
+    },
+    {
+      "code": "3710",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "威海"
+    },
+    {
+      "code": "3711",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "日照"
+    },
+    {
+      "code": "3713",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "临沂"
+    },
+    {
+      "code": "3714",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "德州"
+    },
+    {
+      "code": "3715",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "聊城"
+    },
+    {
+      "code": "3716",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "滨州"
+    },
+    {
+      "code": "3717",
+      "province_code": "37",
+      "province": "山东省",
+      "name": "菏泽"
+    },
+    {
+      "code": "4101",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "郑州"
+    },
+    {
+      "code": "4102",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "开封"
+    },
+    {
+      "code": "4103",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "洛阳"
+    },
+    {
+      "code": "4104",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "平顶山"
+    },
+    {
+      "code": "4105",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "安阳"
+    },
+    {
+      "code": "4106",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "鹤壁"
+    },
+    {
+      "code": "4107",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "新乡"
+    },
+    {
+      "code": "4108",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "焦作"
+    },
+    {
+      "code": "4109",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "濮阳"
+    },
+    {
+      "code": "4110",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "许昌"
+    },
+    {
+      "code": "4111",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "漯河"
+    },
+    {
+      "code": "4112",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "三门峡"
+    },
+    {
+      "code": "4113",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "南阳"
+    },
+    {
+      "code": "4114",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "商丘"
+    },
+    {
+      "code": "4115",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "信阳"
+    },
+    {
+      "code": "4116",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "周口"
+    },
+    {
+      "code": "4117",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "驻马店"
+    },
+    {
+      "code": "419001",
+      "province_code": "41",
+      "province": "河南省",
+      "name": "济源"
+    },
+    {
+      "code": "4201",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "武汉"
+    },
+    {
+      "code": "4202",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "黄石"
+    },
+    {
+      "code": "4203",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "十堰"
+    },
+    {
+      "code": "4205",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "宜昌"
+    },
+    {
+      "code": "4206",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "襄阳"
+    },
+    {
+      "code": "4207",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "鄂州"
+    },
+    {
+      "code": "4208",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "荆门"
+    },
+    {
+      "code": "4209",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "孝感"
+    },
+    {
+      "code": "4210",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "荆州"
+    },
+    {
+      "code": "4211",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "黄冈"
+    },
+    {
+      "code": "4212",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "咸宁"
+    },
+    {
+      "code": "4213",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "随州"
+    },
+    {
+      "code": "4228",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "恩施土家族苗族自治州"
+    },
+    {
+      "code": "429004",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "仙桃"
+    },
+    {
+      "code": "429005",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "潜江"
+    },
+    {
+      "code": "429006",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "天门"
+    },
+    {
+      "code": "429021",
+      "province_code": "42",
+      "province": "湖北省",
+      "name": "神农架林区"
+    },
+    {
+      "code": "4301",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "长沙"
+    },
+    {
+      "code": "4302",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "株洲"
+    },
+    {
+      "code": "4303",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "湘潭"
+    },
+    {
+      "code": "4304",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "衡阳"
+    },
+    {
+      "code": "4305",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "邵阳"
+    },
+    {
+      "code": "4306",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "岳阳"
+    },
+    {
+      "code": "4307",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "常德"
+    },
+    {
+      "code": "4308",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "张家界"
+    },
+    {
+      "code": "4309",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "益阳"
+    },
+    {
+      "code": "4310",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "郴州"
+    },
+    {
+      "code": "4311",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "永州"
+    },
+    {
+      "code": "4312",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "怀化"
+    },
+    {
+      "code": "4313",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "娄底"
+    },
+    {
+      "code": "4331",
+      "province_code": "43",
+      "province": "湖南省",
+      "name": "湘西土家族苗族自治州"
+    },
+    {
+      "code": "4401",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "广州"
+    },
+    {
+      "code": "4402",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "韶关"
+    },
+    {
+      "code": "4403",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "深圳"
+    },
+    {
+      "code": "4404",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "珠海"
+    },
+    {
+      "code": "4405",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "汕头"
+    },
+    {
+      "code": "4406",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "佛山"
+    },
+    {
+      "code": "4407",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "江门"
+    },
+    {
+      "code": "4408",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "湛江"
+    },
+    {
+      "code": "4409",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "茂名"
+    },
+    {
+      "code": "4412",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "肇庆"
+    },
+    {
+      "code": "4413",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "惠州"
+    },
+    {
+      "code": "4414",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "梅州"
+    },
+    {
+      "code": "4415",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "汕尾"
+    },
+    {
+      "code": "4416",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "河源"
+    },
+    {
+      "code": "4417",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "阳江"
+    },
+    {
+      "code": "4418",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "清远"
+    },
+    {
+      "code": "4419",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "东莞"
+    },
+    {
+      "code": "4420",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "中山"
+    },
+    {
+      "code": "4451",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "潮州"
+    },
+    {
+      "code": "4452",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "揭阳"
+    },
+    {
+      "code": "4453",
+      "province_code": "44",
+      "province": "广东省",
+      "name": "云浮"
+    },
+    {
+      "code": "4501",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "南宁"
+    },
+    {
+      "code": "4502",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "柳州"
+    },
+    {
+      "code": "4503",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "桂林"
+    },
+    {
+      "code": "4504",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "梧州"
+    },
+    {
+      "code": "4505",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "北海"
+    },
+    {
+      "code": "4506",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "防城港"
+    },
+    {
+      "code": "4507",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "钦州"
+    },
+    {
+      "code": "4508",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "贵港"
+    },
+    {
+      "code": "4509",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "玉林"
+    },
+    {
+      "code": "4510",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "百色"
+    },
+    {
+      "code": "4511",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "贺州"
+    },
+    {
+      "code": "4512",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "河池"
+    },
+    {
+      "code": "4513",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "来宾"
+    },
+    {
+      "code": "4514",
+      "province_code": "45",
+      "province": "广西壮族自治区",
+      "name": "崇左"
+    },
+    {
+      "code": "4601",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "海口"
+    },
+    {
+      "code": "4602",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "三亚"
+    },
+    {
+      "code": "4603",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "三沙"
+    },
+    {
+      "code": "4604",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "儋州"
+    },
+    {
+      "code": "469001",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "五指山"
+    },
+    {
+      "code": "469002",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "琼海"
+    },
+    {
+      "code": "469005",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "文昌"
+    },
+    {
+      "code": "469006",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "万宁"
+    },
+    {
+      "code": "469007",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "东方"
+    },
+    {
+      "code": "469021",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "定安县"
+    },
+    {
+      "code": "469022",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "屯昌县"
+    },
+    {
+      "code": "469023",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "澄迈县"
+    },
+    {
+      "code": "469024",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "临高县"
+    },
+    {
+      "code": "469025",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "白沙黎族自治县"
+    },
+    {
+      "code": "469026",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "昌江黎族自治县"
+    },
+    {
+      "code": "469027",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "乐东黎族自治县"
+    },
+    {
+      "code": "469028",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "陵水黎族自治县"
+    },
+    {
+      "code": "469029",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "保亭黎族苗族自治县"
+    },
+    {
+      "code": "469030",
+      "province_code": "46",
+      "province": "海南省",
+      "name": "琼中黎族苗族自治县"
+    },
+    {
+      "code": "5000",
+      "province_code": "50",
+      "province": "重庆市",
+      "name": "重庆"
+    },
+    {
+      "code": "5101",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "成都"
+    },
+    {
+      "code": "5103",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "自贡"
+    },
+    {
+      "code": "5104",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "攀枝花"
+    },
+    {
+      "code": "5105",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "泸州"
+    },
+    {
+      "code": "5106",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "德阳"
+    },
+    {
+      "code": "5107",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "绵阳"
+    },
+    {
+      "code": "5108",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "广元"
+    },
+    {
+      "code": "5109",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "遂宁"
+    },
+    {
+      "code": "5110",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "内江"
+    },
+    {
+      "code": "5111",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "乐山"
+    },
+    {
+      "code": "5113",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "南充"
+    },
+    {
+      "code": "5114",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "眉山"
+    },
+    {
+      "code": "5115",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "宜宾"
+    },
+    {
+      "code": "5116",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "广安"
+    },
+    {
+      "code": "5117",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "达州"
+    },
+    {
+      "code": "5118",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "雅安"
+    },
+    {
+      "code": "5119",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "巴中"
+    },
+    {
+      "code": "5120",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "资阳"
+    },
+    {
+      "code": "5132",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "阿坝藏族羌族自治州"
+    },
+    {
+      "code": "5133",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "甘孜藏族自治州"
+    },
+    {
+      "code": "5134",
+      "province_code": "51",
+      "province": "四川省",
+      "name": "凉山彝族自治州"
+    },
+    {
+      "code": "5201",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "贵阳"
+    },
+    {
+      "code": "5202",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "六盘水"
+    },
+    {
+      "code": "5203",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "遵义"
+    },
+    {
+      "code": "5204",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "安顺"
+    },
+    {
+      "code": "5205",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "毕节"
+    },
+    {
+      "code": "5206",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "铜仁"
+    },
+    {
+      "code": "5223",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "黔西南布依族苗族自治州"
+    },
+    {
+      "code": "5226",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "黔东南苗族侗族自治州"
+    },
+    {
+      "code": "5227",
+      "province_code": "52",
+      "province": "贵州省",
+      "name": "黔南布依族苗族自治州"
+    },
+    {
+      "code": "5301",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "昆明"
+    },
+    {
+      "code": "5303",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "曲靖"
+    },
+    {
+      "code": "5304",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "玉溪"
+    },
+    {
+      "code": "5305",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "保山"
+    },
+    {
+      "code": "5306",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "昭通"
+    },
+    {
+      "code": "5307",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "丽江"
+    },
+    {
+      "code": "5308",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "普洱"
+    },
+    {
+      "code": "5309",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "临沧"
+    },
+    {
+      "code": "5323",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "楚雄彝族自治州"
+    },
+    {
+      "code": "5325",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "红河哈尼族彝族自治州"
+    },
+    {
+      "code": "5326",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "文山壮族苗族自治州"
+    },
+    {
+      "code": "5328",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "西双版纳傣族自治州"
+    },
+    {
+      "code": "5329",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "大理白族自治州"
+    },
+    {
+      "code": "5331",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "德宏傣族景颇族自治州"
+    },
+    {
+      "code": "5333",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "怒江傈僳族自治州"
+    },
+    {
+      "code": "5334",
+      "province_code": "53",
+      "province": "云南省",
+      "name": "迪庆藏族自治州"
+    },
+    {
+      "code": "5401",
+      "province_code": "54",
+      "province": "西藏自治区",
+      "name": "拉萨"
+    },
+    {
+      "code": "5402",
+      "province_code": "54",
+      "province": "西藏自治区",
+      "name": "日喀则"
+    },
+    {
+      "code": "5403",
+      "province_code": "54",
+      "province": "西藏自治区",
+      "name": "昌都"
+    },
+    {
+      "code": "5404",
+      "province_code": "54",
+      "province": "西藏自治区",
+      "name": "林芝"
+    },
+    {
+      "code": "5405",
+      "province_code": "54",
+      "province": "西藏自治区",
+      "name": "山南"
+    },
+    {
+      "code": "5406",
+      "province_code": "54",
+      "province": "西藏自治区",
+      "name": "那曲"
+    },
+    {
+      "code": "5425",
+      "province_code": "54",
+      "province": "西藏自治区",
+      "name": "阿里地区"
+    },
+    {
+      "code": "6101",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "西安"
+    },
+    {
+      "code": "6102",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "铜川"
+    },
+    {
+      "code": "6103",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "宝鸡"
+    },
+    {
+      "code": "6104",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "咸阳"
+    },
+    {
+      "code": "6105",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "渭南"
+    },
+    {
+      "code": "6106",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "延安"
+    },
+    {
+      "code": "6107",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "汉中"
+    },
+    {
+      "code": "6108",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "榆林"
+    },
+    {
+      "code": "6109",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "安康"
+    },
+    {
+      "code": "6110",
+      "province_code": "61",
+      "province": "陕西省",
+      "name": "商洛"
+    },
+    {
+      "code": "6201",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "兰州"
+    },
+    {
+      "code": "6202",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "嘉峪关"
+    },
+    {
+      "code": "6203",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "金昌"
+    },
+    {
+      "code": "6204",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "白银"
+    },
+    {
+      "code": "6205",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "天水"
+    },
+    {
+      "code": "6206",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "武威"
+    },
+    {
+      "code": "6207",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "张掖"
+    },
+    {
+      "code": "6208",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "平凉"
+    },
+    {
+      "code": "6209",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "酒泉"
+    },
+    {
+      "code": "6210",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "庆阳"
+    },
+    {
+      "code": "6211",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "定西"
+    },
+    {
+      "code": "6212",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "陇南"
+    },
+    {
+      "code": "6229",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "临夏回族自治州"
+    },
+    {
+      "code": "6230",
+      "province_code": "62",
+      "province": "甘肃省",
+      "name": "甘南藏族自治州"
+    },
+    {
+      "code": "6301",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "西宁"
+    },
+    {
+      "code": "6302",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "海东"
+    },
+    {
+      "code": "6322",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "海北藏族自治州"
+    },
+    {
+      "code": "6323",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "黄南藏族自治州"
+    },
+    {
+      "code": "6325",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "海南藏族自治州"
+    },
+    {
+      "code": "6326",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "果洛藏族自治州"
+    },
+    {
+      "code": "6327",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "玉树藏族自治州"
+    },
+    {
+      "code": "6328",
+      "province_code": "63",
+      "province": "青海省",
+      "name": "海西蒙古族藏族自治州"
+    },
+    {
+      "code": "6401",
+      "province_code": "64",
+      "province": "宁夏回族自治区",
+      "name": "银川"
+    },
+    {
+      "code": "6402",
+      "province_code": "64",
+      "province": "宁夏回族自治区",
+      "name": "石嘴山"
+    },
+    {
+      "code": "6403",
+      "province_code": "64",
+      "province": "宁夏回族自治区",
+      "name": "吴忠"
+    },
+    {
+      "code": "6404",
+      "province_code": "64",
+      "province": "宁夏回族自治区",
+      "name": "固原"
+    },
+    {
+      "code": "6405",
+      "province_code": "64",
+      "province": "宁夏回族自治区",
+      "name": "中卫"
+    },
+    {
+      "code": "6501",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "乌鲁木齐"
+    },
+    {
+      "code": "6502",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "克拉玛依"
+    },
+    {
+      "code": "6504",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "吐鲁番"
+    },
+    {
+      "code": "6505",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "哈密"
+    },
+    {
+      "code": "6523",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "昌吉回族自治州"
+    },
+    {
+      "code": "6527",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "博尔塔拉蒙古自治州"
+    },
+    {
+      "code": "6528",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "巴音郭楞蒙古自治州"
+    },
+    {
+      "code": "6529",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "阿克苏地区"
+    },
+    {
+      "code": "6530",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "克孜勒苏柯尔克孜自治州"
+    },
+    {
+      "code": "6531",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "喀什地区"
+    },
+    {
+      "code": "6532",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "和田地区"
+    },
+    {
+      "code": "6540",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "伊犁哈萨克自治州"
+    },
+    {
+      "code": "6542",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "塔城地区"
+    },
+    {
+      "code": "6543",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "阿勒泰地区"
+    },
+    {
+      "code": "659001",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "石河子"
+    },
+    {
+      "code": "659002",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "阿拉尔"
+    },
+    {
+      "code": "659003",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "图木舒克"
+    },
+    {
+      "code": "659004",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "五家渠"
+    },
+    {
+      "code": "659005",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "北屯"
+    },
+    {
+      "code": "659006",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "铁门关"
+    },
+    {
+      "code": "659007",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "双河"
+    },
+    {
+      "code": "659008",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "可克达拉"
+    },
+    {
+      "code": "659009",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "昆玉"
+    },
+    {
+      "code": "659010",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "胡杨河"
+    },
+    {
+      "code": "659011",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "新星"
+    },
+    {
+      "code": "659012",
+      "province_code": "65",
+      "province": "新疆维吾尔自治区",
+      "name": "白杨"
+    },
+    {
+      "code": "tw-1",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "台北"
+    },
+    {
+      "code": "tw-2",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "新北"
+    },
+    {
+      "code": "tw-3",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "桃园"
+    },
+    {
+      "code": "tw-4",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "台中"
+    },
+    {
+      "code": "tw-5",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "台南"
+    },
+    {
+      "code": "tw-6",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "高雄"
+    },
+    {
+      "code": "tw-7",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "基隆"
+    },
+    {
+      "code": "tw-8",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "新竹"
+    },
+    {
+      "code": "tw-9",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "嘉义"
+    },
+    {
+      "code": "tw-10",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "新竹县"
+    },
+    {
+      "code": "tw-11",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "苗栗县"
+    },
+    {
+      "code": "tw-12",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "彰化县"
+    },
+    {
+      "code": "tw-13",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "南投县"
+    },
+    {
+      "code": "tw-14",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "云林县"
+    },
+    {
+      "code": "tw-15",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "嘉义县"
+    },
+    {
+      "code": "tw-16",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "屏东县"
+    },
+    {
+      "code": "tw-17",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "宜兰县"
+    },
+    {
+      "code": "tw-18",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "花莲县"
+    },
+    {
+      "code": "tw-19",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "台东县"
+    },
+    {
+      "code": "tw-20",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "澎湖县"
+    },
+    {
+      "code": "tw-21",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "金门县"
+    },
+    {
+      "code": "tw-22",
+      "province_code": "71",
+      "province": "台湾省",
+      "name": "连江县"
+    },
+    {
+      "code": "8100",
+      "province_code": "81",
+      "province": "香港特别行政区",
+      "name": "香港"
+    },
+    {
+      "code": "8200",
+      "province_code": "82",
+      "province": "澳门特别行政区",
+      "name": "澳门"
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+<?php
+declare(strict_types=1);
+if(PHP_SAPI!=='cli') exit;
+require dirname(__DIR__).'/app/bootstrap.php';
+$fixtures=json_decode(file_get_contents(ROOT.'/tests/artifacts/fixtures.json'),true,512,JSON_THROW_ON_ERROR);
+$priority=json_decode(file_get_contents(ROOT.'/tests/artifacts/verification-priority-fixtures.json'),true,512,JSON_THROW_ON_ERROR);
+$token=$fixtures['token']; $checks=[];
+if(!preg_match('/^xiuqa_[0-9]+$/',$token) || $priority['token']!==$token) throw new RuntimeException('Run verification-priority.php first.');
+$ids=array_map('intval',$fixtures['listings']);
+if(count($ids)!==20 || (int)scalar('SELECT COUNT(*) FROM xiu_listings l JOIN xiu_users u ON u.id=l.user_id WHERE l.id IN ('.implode(',',$ids).') AND u.username LIKE ?',[$token.'_%'])!==20) throw new RuntimeException('Only recorded QA listings can be changed.');
+$check=function(bool $condition,string $label) use (&$checks): void { if(!$condition) throw new RuntimeException($label); $checks[]=$label; echo 'PASS '.$label.PHP_EOL; };
+$remember=function(string $kind,int $id) use (&$fixtures): void { $fixtures[$kind][]=$id; file_put_contents(ROOT.'/tests/artifacts/fixtures.json',json_encode($fixtures,JSON_THROW_ON_ERROR),LOCK_EX); };
+query('INSERT INTO xiu_cities (province,name,slug) VALUES (?,?,?)',['测试省份',$token.' city','cache-city-'.substr($token,6)]);
+$city=(int)db()->lastInsertId(); $remember('cities',$city); ensureSeoSlug('xiu_cities',$city);
+query('INSERT INTO xiu_districts (city_id,name,seo_slug) VALUES (?,?,?)',[$city,$token.' district','cache-district-'.substr($token,6)]);
+$district=(int)db()->lastInsertId(); $remember('districts',$district);
+db()->beginTransaction(); query('UPDATE xiu_listings SET city_id=?,district_id=? WHERE id IN ('.implode(',',$ids).')',[$city,$district]); db()->commit();
+$filters=['category'=>$priority['category'],'city'=>$city]; $url=listUrl($filters);
+$page=function() use ($url): array {
+    $html=file_get_contents(absoluteUrl($url),false,stream_context_create(['http'=>['timeout'=>15,'ignore_errors'=>true]]));
+    preg_match_all('/data-listing-id="(\d+)"/',$html,$matches);
+    return ['ids'=>array_map('intval',$matches[1]),'headers'=>$http_response_header,'html'=>$html];
+};
+$result=listingSearch($filters); $revision=publicCacheRevision();
+$check($result['total']===20 && array_column($result['items'],'id')===array_slice($priority['expected'],0,12),'Cold cache keeps certification order and exact pagination');
+$warm=$page();
+$check($warm['ids']===array_column($result['items'],'id') && (bool)array_filter($warm['headers'],fn($line)=>str_starts_with($line,'X-Xiu-Data-Cache:') && str_contains($line,'miss=0')),'A separate HTTP request reuses the public data cache');
+$check(array_column(listingPreview($filters,5)['items'],'id')===array_slice($priority['expected'],0,5),'Homepage preview keeps the same ranking without a total-count query');
+
+db()->beginTransaction(); query("UPDATE xiu_listings SET status='offline' WHERE id=?",[$ids[0]]);
+$check(publicCacheRevision()===$revision && listingSearch($filters)['total']===19,'Uncommitted writes bypass caches without publishing a new revision');
+$check($page()['ids']===$warm['ids'],'Other requests still see committed data during the transaction');
+db()->rollBack();
+$check(publicCacheRevision()===$revision && listingSearch($filters)['total']===20,'Rollback preserves the last committed cache');
+
+db()->beginTransaction(); query("UPDATE xiu_listings SET status='offline' WHERE id=?",[$ids[0]]); db()->commit();
+$check(publicCacheRevision()!==$revision && listingSearch($filters)['total']===19 && !in_array($ids[0],$page()['ids'],true),'Committed removal immediately invalidates cached public results');
+query("UPDATE xiu_listings SET status='pending' WHERE id=?",[$ids[0]]);
+$check(listingSearch($filters)['total']===19,'Pending information stays hidden');
+query("UPDATE xiu_listings SET status='published' WHERE id=?",[$ids[0]]);
+$check(listingSearch($filters)['total']===20 && in_array($ids[0],$page()['ids'],true),'Approval immediately restores public visibility');
+query('UPDATE xiu_listings SET title=? WHERE id=?',[$token.' changed service title',$ids[0]]);
+$check(str_contains($page()['html'],$token.' changed service title'),'Content changes replace cached card data');
+
+refreshListing(['id'=>$priority['users']['none']],$ids[2]);
+$check($page()['ids'][0]===$ids[2] && listingSearch($filters)['items'][0]['id']===$ids[2],'A real member refresh invalidates caches and takes first place');
+query("UPDATE xiu_user_verifications SET status='pending' WHERE user_id=?",[$priority['users']['company']]);
+$check(listingSearch($filters)['items'][1]['user_id']===$priority['users']['personal'],'Certification changes invalidate cached ranking');
+query("UPDATE xiu_user_verifications SET status='approved' WHERE user_id=?",[$priority['users']['company']]);
+$check(listingSearch($filters)['items'][1]['user_id']===$priority['users']['company'],'Company certification precedes personal certification after refresh');
+query('UPDATE xiu_users SET enabled=0 WHERE id=?',[$priority['users']['none']]);
+$check(!in_array($ids[2],$page()['ids'],true) && !array_filter(listingSearch($filters,1,100)['items'],fn($item)=>(int)$item['user_id']===$priority['users']['none']),'Disabled owners disappear from a previously warm cache');
+query('UPDATE xiu_users SET enabled=1 WHERE id=?',[$priority['users']['none']]);
+query('UPDATE xiu_districts SET enabled=0 WHERE id=?',[$district]);
+$check(listingSearch($filters)['total']===0 && !$page()['ids'],'Disabled districts immediately hide their public information');
+query('UPDATE xiu_districts SET enabled=1 WHERE id=?',[$district]);
+query('UPDATE xiu_categories SET enabled=0 WHERE id=?',[$priority['category']]);
+$check(listingSearch($filters)['total']===0 && !in_array($priority['category'],categoryIds('service'),true),'Disabled categories invalidate cached hierarchy and listings');
+query('UPDATE xiu_categories SET enabled=1 WHERE id=?',[$priority['category']]);
+query('UPDATE xiu_cities SET enabled=0 WHERE id=?',[$city]);
+$check(listingSearch($filters)['total']===0 && !in_array($city,array_map('intval',array_column(cityList(),'id')),true),'Disabled cities invalidate cached eligibility and city navigation');
+query('UPDATE xiu_cities SET enabled=1 WHERE id=?',[$city]);
+$check(listingSearch($filters)['total']===20,'Re-enabling all test objects restores the exact total');
+
+$calls=0; $load=function() use (&$calls) { return ++$calls; };
+$check(publicDataRemember('qa-cache-expiry',[$token],2,$load)===1 && publicDataRemember('qa-cache-expiry',[$token],2,$load)===1,'Repeated reads use cached values');
+usleep(2100000);
+$check(publicDataRemember('qa-cache-expiry',[$token],2,$load)===2,'Expired data is rebuilt automatically');
+$before=$GLOBALS['public_data_cache_stats']['bypass']??0;
+listingSearch($filters+['q'=>$token]);
+$check(($GLOBALS['public_data_cache_stats']['bypass']??0)>$before,'Keyword results bypass shared caching');
+$files=glob(ROOT.'/storage/cache/public-data/*.json');
+$check(!array_filter($files,fn($file)=>preg_match('/"(?:password_hash|csrf|admin_id|subject_name)"/',file_get_contents($file))),'Cached files contain public data without credentials, form tokens or identity documents');
+file_put_contents(ROOT.'/tests/artifacts/public-cache-results.json',json_encode(['passed'=>count($checks),'checks'=>$checks],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR));
+echo 'SUCCESS '.count($checks).' cache checks. Run cleanup.php to remove the recorded QA fixtures.'.PHP_EOL;

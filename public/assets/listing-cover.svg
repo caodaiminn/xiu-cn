@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="300" viewBox="0 0 420 300">
+ <defs><linearGradient id="background" x2="1" y2="1"><stop stop-color="#0665c4"/><stop offset="1" stop-color="#1cb5e7"/></linearGradient></defs>
+ <path fill="url(#background)" d="M0 0h420v300H0z"/>
+ <circle cx="366" cy="43" r="94" fill="none" stroke="#fff" stroke-opacity=".1" stroke-width="18"/>
+ <path d="M0 248 140 185 260 265 420 192v108H0Z" fill="#fff" fill-opacity=".08"/>
+ <g stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".9"><path d="m193 77-31 31a20 20 0 0 0 28 28l31-31a28 28 0 0 0 32-36l-17 17-13-13 17-17a28 28 0 0 0-36 32"/><circle cx="178" cy="121" r="2"/></g>
+ <text x="210" y="196" text-anchor="middle" fill="#fff" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="38" font-weight="700">本地维修</text>
+ <text x="210" y="234" text-anchor="middle" fill="#dcefff" font-family="Microsoft YaHei, PingFang SC, sans-serif" font-size="21">服务信息 · 求修需求</text>
+</svg>

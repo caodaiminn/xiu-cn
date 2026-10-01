@@ -1,0 +1,63 @@
+<?php
+declare(strict_types=1);
+if(PHP_SAPI!=='cli') exit;
+require dirname(__DIR__).'/app/bootstrap.php';
+$checks=[]; $jobs=[]; $user=0; $listing=0;
+$check=function(bool $ok,string $label) use (&$checks): void { if(!$ok) throw new RuntimeException($label); $checks[]=$label; echo 'PASS '.$label.PHP_EOL; };
+$override=['enabled'=>true,'recipient'=>'qa@example.invalid'];
+$token='xiuqa_'.date('YmdHis').'_mail';
+$remember=function(?int $id) use (&$jobs): ?int { if($id) $jobs[]=$id; return $id; };
+$transport=fn($settings,$job)=>'<local-test@example.invalid>';
+try {
+    $settings=mailSettings();
+    $check($settings['enabled'] && $settings['host']==='smtp.exmail.qq.com' && $settings['port']===465 && $settings['security']==='ssl' && $settings['recipient']==='5841079@qq.com','Configured SSL SMTP and notification recipient');
+    $raw=file_get_contents(mailDirectory().'/settings.json');
+    $check(!str_contains($raw,$settings['password']) && strlen(file_get_contents(mailDirectory().'/secret.key'))===32,'SMTP password is encrypted outside the document root');
+    query('INSERT INTO xiu_users (username,password_hash) VALUES (?,?)',[$token,password_hash(bin2hex(random_bytes(16)),PASSWORD_DEFAULT)]); $user=(int)db()->lastInsertId();
+    $category=(int)scalar("SELECT id FROM xiu_categories WHERE kind='service' AND enabled=1 ORDER BY id LIMIT 1");
+    $city=(int)scalar('SELECT id FROM xiu_cities WHERE enabled=1 ORDER BY id LIMIT 1');
+    query('INSERT INTO xiu_listings (user_id,category_id,city_id,type,title,address,contact,phone,body,is_demo) VALUES (?,?,?,?,?,?,?,?,?,1)',[$user,$category,$city,'service','邮件通知功能测试信息','测试服务地址','测试联系人','00000000000','此信息仅用于邮件通知功能验收，完成后删除。']); $listing=(int)db()->lastInsertId();
+    $job=$remember(enqueueListingNotification($listing,$override));
+    $check($job>0 && row('SELECT * FROM xiu_mail_notifications WHERE id=?',[$job])['status']==='queued','Pending listing creates a queued notification');
+    $check(enqueueListingNotification($listing,$override)===$job,'Same submission is deduplicated');
+    $body=(string)scalar('SELECT body FROM xiu_mail_notifications WHERE id=?',[$job]);
+    $check(str_contains($body,'#listing-'.$listing) && !str_contains($body,'00000000000') && !str_contains($body,$settings['password']),'Review link is included without contact phone or SMTP credentials');
+    $check(enqueueListingNotification($listing,['enabled'=>false])===null,'Disabled notifications do not create jobs');
+    db()->beginTransaction(); query('UPDATE xiu_listings SET title=? WHERE id=?',['回滚中的邮件测试信息',$listing]);
+    $rolled=enqueueListingNotification($listing,$override); db()->rollBack();
+    $check(!scalar('SELECT id FROM xiu_mail_notifications WHERE id=?',[$rolled]),'Listing rollback also removes its notification');
+    $check(sendMailJob($job,$transport)['status']==='sent' && sendMailJob($job,$transport)['status']==='skipped','Successful job is sent once and cannot be sent again');
+    query('UPDATE xiu_listings SET title=? WHERE id=?',['修改重提邮件通知测试信息',$listing]);
+    $failed=$remember(enqueueListingNotification($listing,$override));
+    $check($failed!==$job,'Changed resubmission creates a separate notification');
+    $badTransport=function($settings,$job): string { throw new RuntimeException('Test failure '.$settings['password']); };
+    $result=sendMailJob($failed,$badTransport);
+    $check($result['status']==='failed' && !str_contains($result['error'],$settings['password']) && str_contains($result['error'],'[已隐藏]'),'Transport errors are recorded with passwords removed');
+    $check(scalar('SELECT status FROM xiu_listings WHERE id=?',[$listing])==='pending','Failed mail does not approve, remove, or reject a listing');
+    retryMailJob($failed); $check(sendMailJob($failed,$transport)['status']==='sent' && (int)scalar('SELECT attempts FROM xiu_mail_notifications WHERE id=?',[$failed])===2,'Failed notification can be retried');
+    db()->beginTransaction(); query('UPDATE xiu_listings SET title=? WHERE id=?',['入队失败也能提交测试信息',$listing]);
+    $safe=queueListingReviewNotification($listing,['enabled'=>true,'recipient'=>new stdClass()]); db()->commit();
+    $check($safe===null && scalar('SELECT title FROM xiu_listings WHERE id=?',[$listing])==='入队失败也能提交测试信息','Queue failure does not roll back the business transaction');
+    $cancel=$remember(enqueueListingNotification($listing,$override));
+    query("UPDATE xiu_listings SET status='published' WHERE id=?",[$listing]);
+    $check(sendMailJob($cancel)['status']==='cancelled' && enqueueListingNotification($listing,$override)===null,'Already reviewed information is not emailed as pending');
+    query("UPDATE xiu_listings SET status='pending',title=? WHERE id=?",['后台异步队列测试信息',$listing]);
+    $async=$remember(enqueueListingNotification($listing,$override));
+    query("INSERT INTO xiu_mail_notifications (event_key,kind,recipient,subject,body) VALUES (?,'test','qa@example.invalid','Local test only','Local test only')",[bin2hex(random_bytes(32))]); $test=$remember((int)db()->lastInsertId());
+    $check(startMailWorker(),'Hidden background worker starts successfully');
+    for($attempt=0;$attempt<40 && scalar('SELECT status FROM xiu_mail_notifications WHERE id=?',[$async])==='queued';$attempt++) usleep(200000);
+    $check(scalar('SELECT status FROM xiu_mail_notifications WHERE id=?',[$async])==='cancelled','Background worker processes the queue without sending to a mismatched recipient');
+    $check(scalar('SELECT status FROM xiu_mail_notifications WHERE id=?',[$test])==='queued','Background worker does not race the synchronous test-mail action');
+    query("UPDATE xiu_mail_notifications SET status='failed',attempts=3 WHERE id=?",[$test]);
+    try { retryMailJob($test); $check(false,'Retry limit'); } catch(DomainException $exception) { $check(true,'Failed job retry is limited to three attempts'); }
+    $check((int)scalar("SELECT COUNT(*) FROM xiu_mail_notifications WHERE kind='test' AND status='sent' AND recipient='5841079@qq.com'")>=1,'The authorized real SMTP test is logged as accepted');
+    file_put_contents(ROOT.'/tests/artifacts/mail-notifications-results.json',json_encode(['passed'=>count($checks),'checks'=>$checks],JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR));
+} finally {
+    if(db()->inTransaction()) db()->rollBack();
+    foreach(array_unique($jobs) as $id) query('DELETE FROM xiu_mail_notifications WHERE id=?',[$id]);
+    if($listing) query('DELETE FROM xiu_mail_notifications WHERE listing_id=?',[$listing]);
+    if($listing) query('DELETE FROM xiu_listings WHERE id=? AND user_id=?',[$listing,$user]);
+    if($user) query('DELETE FROM xiu_users WHERE id=? AND username=?',[$user,$token]);
+    clearAdminListingCountCache();
+}
+echo 'SUCCESS '.count($checks).' checks; fixtures removed.'.PHP_EOL;
