@@ -79,7 +79,7 @@ try {
 
 空调品牌旧详情链接兼容：最初一批示例信息的短地址前缀含数字，与原路由格式不匹配；改为纯字母前缀后仍需保留旧链接。现通过 `xiu_listing_slug_aliases` 将78,600个旧地址映射到原信息，详情控制器按现有规则301跳转到规范地址，既有信息和新地址不变。新安装包含 `scripts/migrate-listing-slug-aliases.php`；已有库运行该迁移建表，旧地址映射可用 `scripts/import-brand-listing-url-aliases.php <rollback-url-repair.sql> --apply` 从本地恢复记录导入，默认只预览，事务提交并备份原映射及新增项回退SQL，重复运行新增0条。用户反馈地址 `ab0b406a2025.html` 已恢复访问。本地核验78,600组新旧路由、全部城市/品牌各8条、367,489条既有信息内容哈希不变，并通过65组地址的197项HTTP/浏览器检查；复验 `tests/brand-listing-aliases.php` 与 `tests/brand-listing-aliases-http.cjs`，报告位于 `tests/artifacts/brand-listing-aliases-results.json` 及 `brand-listing-aliases-http-results.json`。恢复材料保留在 `backup/2026-10-02-brand-listing-old-links/`，映射数据与备份不上传GitHub。
 
-注册联系电话：注册页新增必填的手机号或固定电话，保存在 `xiu_users.phone`；新发布维修服务或求修需求时自动带出，可继续修改。编辑信息使用该信息原有电话，提交失败保留用户输入；发布时修改电话不会修改账号电话。原账号电话默认留空，登录及发布流程保持可用。新安装已纳入初始化，旧数据库先运行 `scripts/migrate-user-phone.php` 再部署页面源码；迁移先备份用户表，重复运行不改数据。已通过18项注册与回填检查，覆盖号码校验、保存、重新登录、手动改号、失败回填、已有信息及老账号兼容、1440px/390px/320px布局；运行 `node tests/register-phone.cjs` 复验，结果为 `tests/artifacts/register-phone-results.json`。
+手机号注册账号：注册页将原“账号”和“联系电话”合并为一个“手机号码”输入框，只接受11位大陆手机号码（`1[3-9][0-9]{9}`），手机号码同时保存为 `xiu_users.username` 和 `phone`，用于手机号加密码登录，并在新发布维修服务或求修需求时默认带出。手机号按现有账号唯一索引去重；前端和服务器都拒绝固定电话、字母账号及不符合格式的号码，服务器不使用额外提交的独立联系电话字段。发布联系电话仍可修改；编辑信息保留原信息电话，提交失败保留手动输入，发布改号不修改账号手机号。原有字母账号仍可登录，已有数据和账号ID不变。此前 `scripts/migrate-user-phone.php` 的列迁移继续适用，此次无需新增数据库列。已通过25项注册、手机号登录、重复号码校验、回填及兼容检查，并核对1440px/390px/320px布局；运行 `node tests/register-phone.cjs` 本地复验，结果为 `tests/artifacts/register-phone-results.json`。其他注册验收脚本已同步使用手机号，并在临时数据清理时核对记录的验收密码和创建时间，保留非本次验收账号。源码恢复备份位于 `backup/2026-10-02-mobile-number-account/`。
 
 ## 发布描述的AI生成
 

@@ -5,20 +5,25 @@ require dirname(__DIR__).'/app/bootstrap.php';
 $path=ROOT.'/tests/artifacts/register-phone-fixture.json';
 $fixture=json_decode(file_get_contents($path),true,512,JSON_THROW_ON_ERROR);
 if(!preg_match('/^phoneqa_[0-9]{13}$/',$fixture['token'])) throw new RuntimeException('Invalid fixture token.');
-$names=[$fixture['token'],$fixture['token'].'_old',$fixture['token'].'_bad'];
 $mode=$argv[1]??'';
+if($mode==='setup') {
+    do { $fixture['phone']='138'.sprintf('%08d',random_int(0,99999999)); } while(scalar('SELECT id FROM xiu_users WHERE username=?',[$fixture['phone']]));
+    file_put_contents($path,json_encode($fixture,JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR));
+}
+$names=[$fixture['phone'],$fixture['token'].'_old',$fixture['token'].'_bad'];
 if($mode==='setup') {
     if(scalar('SELECT id FROM xiu_users WHERE username IN (?,?,?)',$names)) throw new RuntimeException('Fixture account already exists.');
     query('INSERT INTO xiu_users (username,password_hash) VALUES (?,?)',[$names[1],password_hash($fixture['password'],PASSWORD_DEFAULT)]);
-    echo json_encode(['legacy_id'=>(int)db()->lastInsertId()]).PHP_EOL;
+    echo json_encode(['legacy_id'=>(int)db()->lastInsertId(),'phone'=>$fixture['phone']]).PHP_EOL;
 } elseif($mode==='verify') {
-    $user=row('SELECT id,phone FROM xiu_users WHERE username=?',[$names[0]]);
-    if(!$user || $user['phone']!==$fixture['phone'] || scalar('SELECT id FROM xiu_users WHERE username=?',[$names[2]])) throw new RuntimeException('Registration phone persistence or validation failed.');
+    $user=row('SELECT id,phone,password_hash FROM xiu_users WHERE username=?',[$names[0]]);
+    if(!$user || $user['phone']!==$fixture['phone'] || !password_verify($fixture['password'],$user['password_hash']) || scalar('SELECT id FROM xiu_users WHERE username=?',[$names[2]])) throw new RuntimeException('Registration phone persistence or validation failed.');
     query("INSERT INTO xiu_listings (user_id,category_id,city_id,type,title,address,contact,phone,body,status,is_demo) VALUES (?,2,1,'service','联系电话回填验收信息','示例地址','示例联系人',?,'用于核对编辑已有信息时联系电话保持原值。','pending',1)",[$user['id'],$fixture['edit_phone']]);
     echo json_encode(['registered_id'=>(int)$user['id'],'listing_id'=>(int)db()->lastInsertId(),'phone_saved'=>true]).PHP_EOL;
 } elseif($mode==='cleanup') {
     foreach($names as $name) {
-        $user=row('SELECT id FROM xiu_users WHERE username=?',[$name]); if(!$user) continue;
+        $user=row('SELECT id,password_hash FROM xiu_users WHERE username=?',[$name]); if(!$user) continue;
+        if(!password_verify($fixture['password'],$user['password_hash'])) throw new RuntimeException('Fixture account ownership mismatch.');
         $items=rows('SELECT id,title,is_demo,status FROM xiu_listings WHERE user_id=?',[$user['id']]);
         foreach($items as $item) {
             if(!$item['is_demo'] || $item['status']!=='pending' || $item['title']!=='联系电话回填验收信息') throw new RuntimeException('Unexpected fixture listing.');

@@ -64,11 +64,12 @@ try:
         check(guest.request(path)[0] in [403,404], 'Private path blocked ' + path)
     check(guest.request('/register/', {'username':'bad','password':'12345678'})[0] == 403, 'CSRF required')
     for client, suffix in [(user,'a'),(other,'b')]:
-        name=TOKEN+'_'+suffix
-        result=client.post('/register/', {'username':name,'password':'QATestPass2026','confirm_password':'QATestPass2026','phone':'13800000000'})
+        name='133'+str(time.time_ns())[-8:]
+        fixtures.setdefault('mobile_accounts',{})[name]='QATestPass2026'
+        result=client.post('/register/', {'username':name,'password':'QATestPass2026','confirm_password':'QATestPass2026'})
         remember('users',name)
         check('/yong-hu-zhong-xin/' in result[2], 'Register and login ' + suffix)
-    check('已被使用' in guest.post('/register/', {'username':TOKEN+'_a','password':'QATestPass2026','confirm_password':'QATestPass2026','phone':'13800000000'})[1], 'Duplicate username rejected')
+    check('已注册' in guest.post('/register/', {'username':fixtures['users'][0],'password':'QATestPass2026','confirm_password':'QATestPass2026'})[1], 'Duplicate username rejected')
     check('账号或密码不正确' in guest.post('/login/', {'username':'daiit','password':'invalid-password'})[1], 'Invalid credentials rejected')
     services = user.request('/publish/')[1]
     category = re.search(r'<select name="category_id".*?<option value="(\d+)"', services, re.S).group(1)
@@ -195,13 +196,13 @@ try:
     settings_changed=False
     # Disable/re-enable only the newly created account.
     users_html=admin.request('/dgadmin/users/')[1]
-    user_row=re.search(r'<tr><td>'+re.escape(TOKEN+'_a')+r'</td>(.*?)</tr>',users_html,re.S).group(1)
+    user_row=re.search(r'<tr><td>'+re.escape(fixtures['users'][0])+r'</td>(.*?)</tr>',users_html,re.S).group(1)
     user_id=int(re.search(r'name="id" value="(\d+)"',user_row).group(1))
     admin.post('/dgadmin/users/',{'id':user_id,'action':'toggle'})
     check('/deng-lu/' in user.request('/user/')[2] and guest.request(f'/info/{listing}/')[0]==404, 'Disabled user cannot manage or expose content')
     admin.post('/dgadmin/users/',{'id':user_id,'action':'toggle'})
     fresh=Client()
-    fresh.post('/login/',{'username':TOKEN+'_a','password':'QATestPass2026'})
+    fresh.post('/login/',{'username':fixtures['users'][0],'password':'QATestPass2026'})
     check(TOKEN+' request information' in fresh.request('/user/')[1], 'Database persists after new login')
     cookie_header=Client().request('/deng-lu/')[4].get('Set-Cookie','')
     check('HttpOnly' in cookie_header and 'SameSite=Lax' in cookie_header, 'Session cookie is HttpOnly and SameSite')

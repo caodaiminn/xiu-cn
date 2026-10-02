@@ -1,14 +1,14 @@
 const {chromium}=require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),assert=require('assert'),base='http://www.xiu.cn',out='tests/artifacts/';
-const token='xiuqa_'+Date.now(),username=token+'_category',password='QACategory2026',checks=[];
-const fixtures={token,users:[username],listings:[],articles:[],categories:[],cities:[],districts:[]};fs.writeFileSync(out+'fixtures.json',JSON.stringify(fixtures));
+const token='xiuqa_'+Date.now(),username='138'+String(Date.now()).slice(-8),password='QACategory2026',checks=[];
+const fixtures={token,users:[username],mobile_accounts:{[username]:password},listings:[],articles:[],categories:[],cities:[],districts:[]};fs.writeFileSync(out+'fixtures.json',JSON.stringify(fixtures));
 const pass=(value,label)=>{assert(value,label);checks.push(label);console.log('PASS',label)};
 const remember=id=>{if(!fixtures.listings.includes(id)){fixtures.listings.push(id);fs.writeFileSync(out+'fixtures.json',JSON.stringify(fixtures));}};
 (async()=>{
  const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
  try{
   const context=await browser.newContext(),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(base+'/zhu-ce/');await page.getByLabel('账号',{exact:true}).fill(username);await page.getByLabel('密码',{exact:true}).fill(password);await page.getByLabel('确认密码',{exact:true}).fill(password);await page.getByLabel('联系电话',{exact:true}).fill('13800000000');
+  await page.goto(base+'/zhu-ce/');await page.getByLabel('手机号码',{exact:true}).fill(username);await page.getByLabel('密码',{exact:true}).fill(password);await page.getByLabel('确认密码',{exact:true}).fill(password);
   await Promise.all([page.waitForURL('**/yong-hu-zhong-xin/'),page.getByRole('button',{name:'注册并登录',exact:true}).click()]);
   const r=await page.goto(base+'/fa-bu-xin-xi/'),source=await r.text();
   const categories=await page.evaluate(source=>Array.from(new DOMParser().parseFromString(source,'text/html').querySelectorAll('#listing-category option[data-parent]')).map(option=>({id:option.value,parent:option.dataset.parent,depth:Number(option.dataset.depth),name:option.dataset.name})),source);

@@ -38,7 +38,7 @@ try:
  for route in ['/yong-hu-zhong-xin/','/yong-hu-zhong-xin/wo-de-fa-bu/',verify]:check('/deng-lu/' in guest.request(route)[2],'Member route requires login '+route)
  check('/dgadmin/login/' in guest.request(manage)[2],'Verification review requires administrator')
  for client,suffix in [(owner,'member'),(other,'company')]:
-  username=TOKEN+'_'+suffix;client.post('/zhu-ce/',{'username':username,'password':'QAMember2026','confirm_password':'QAMember2026','phone':'13800000000'});remember('users',username)
+  username='134'+str(time.time_ns())[-8:];fixtures.setdefault('mobile_accounts',{})[username]='QAMember2026';client.post('/zhu-ce/',{'username':username,'password':'QAMember2026','confirm_password':'QAMember2026'});remember('users',username)
  check(stat(owner.request('/yong-hu-zhong-xin/')[1],'total')==0,'New account has zero real publication counts')
  check('noindex' in owner.request(verify)[3].get('X-Robots-Tag',''),'Member verification is not indexed')
  person={'type':'personal','subject_name':'QA synthetic person'}

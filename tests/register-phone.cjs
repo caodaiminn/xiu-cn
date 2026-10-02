@@ -9,19 +9,22 @@ const checks=[],pass=(condition,label)=>{assert(condition,label);checks.push(lab
 (async()=>{
  let browser;const contexts=[]; const errors=[];
  try {
-  cli('setup'); browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
+  Object.assign(fixture,JSON.parse(cli('setup')));save(); browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
   const context=await browser.newContext();contexts.push(context);const page=await context.newPage();page.on('pageerror',error=>errors.push(error.message));
-  await page.goto(base+'/zhu-ce/'); const phone=page.getByLabel('联系电话',{exact:true});
-  pass(await phone.getAttribute('type')==='tel' && await phone.getAttribute('autocomplete')==='tel' && await phone.getAttribute('required')!==null,'Registration has a required telephone field');
-  for(const badPhone of ['','------','abc123456','1'.repeat(33)]) {
+  await page.goto(base+'/zhu-ce/'); const phone=page.getByLabel('手机号码',{exact:true});
+  pass(await phone.getAttribute('type')==='tel' && await phone.getAttribute('maxlength')==='11' && await phone.getAttribute('required')!==null,'Registration has one required 11-digit mobile account field');
+  pass(await page.locator('[name=phone]').count()===0 && await page.locator('.auth-card input:not([type=hidden])').count()===3,'Registration merges the account and contact phone inputs');
+  await phone.fill('0735-0000000');pass(await phone.evaluate(input=>!input.checkValidity()),'Browser rejects a landline number');
+  for(const badPhone of ['','0735-0000000','abc123456','12800000000','1380000000','138000000000','138 0000 0000']) {
    const csrf=await page.locator('[name=csrf]').inputValue();
-   const response=await page.request.post(base+'/zhu-ce/',{form:{csrf,username:fixture.token+'_bad',password:fixture.password,confirm_password:fixture.password,phone:badPhone}});
-   const html=await response.text(); pass(response.status()===200 && html.includes('请填写有效的联系电话'),'Server rejects invalid phone '+JSON.stringify(badPhone));
+   const response=await page.request.post(base+'/zhu-ce/',{form:{csrf,username:badPhone,password:fixture.password,confirm_password:fixture.password,phone:fixture.phone}});
+   const html=await response.text(); pass(response.status()===200 && html.includes('请输入有效的11位手机号码'),'Server rejects invalid mobile account '+JSON.stringify(badPhone));
   }
-  await page.getByLabel('账号',{exact:true}).fill(fixture.token); await phone.fill(fixture.phone);
+  await phone.fill(fixture.phone);
   await page.getByLabel('密码',{exact:true}).fill(fixture.password);await page.getByLabel('确认密码',{exact:true}).fill(fixture.password);
   await Promise.all([page.waitForURL('**/yong-hu-zhong-xin/'),page.getByRole('button',{name:'注册并登录',exact:true}).click()]);
   const verified=JSON.parse(cli('verify'));pass(verified.phone_saved,'Registered phone is stored on the account');
+  pass((await page.locator('.member-profile').innerText()).includes(fixture.phone),'The mobile number is the account identifier');
   await page.goto(base+'/fa-bu-xin-xi/');pass(await page.locator('[name=phone]').inputValue()===fixture.phone,'New publication defaults to the registered phone');
   await page.locator('[data-publish-category-id="1"]').click();await page.locator('[data-publish-category-id="2"]').click();await page.getByRole('button',{name:'下一步',exact:true}).click();
   await page.locator('[name=phone]').fill(fixture.edit_phone);await page.locator('[name=type][value=request]').check();
@@ -39,7 +42,10 @@ const checks=[],pass=(condition,label)=>{assert(condition,label);checks.push(lab
   }
   const fresh=await browser.newContext();contexts.push(fresh);const login=await fresh.newPage();
   await login.goto(base+'/deng-lu/');pass(await login.locator('[name=phone]').count()===0,'Login form keeps its existing fields');
-  await login.getByLabel('账号',{exact:true}).fill(fixture.token);await login.getByLabel('密码',{exact:true}).fill(fixture.password);
+  const duplicateCsrf=await login.locator('[name=csrf]').inputValue();
+  const duplicate=await login.request.post(base+'/zhu-ce/',{form:{csrf:duplicateCsrf,username:fixture.phone,password:fixture.password,confirm_password:fixture.password}});
+  pass((await duplicate.text()).includes('这个手机号码已注册'),'Duplicate mobile accounts are rejected');
+  await login.getByLabel('账号',{exact:true}).fill(fixture.phone);await login.getByLabel('密码',{exact:true}).fill(fixture.password);
   await Promise.all([login.waitForURL('**/yong-hu-zhong-xin/'),login.getByRole('button',{name:'登录',exact:true}).click()]);
   await login.goto(base+'/fa-bu-xin-xi/');pass(await login.locator('[name=phone]').inputValue()===fixture.phone,'Phone is loaded from the account after a fresh login');
   const legacy=await browser.newContext();contexts.push(legacy);const old=await legacy.newPage();await old.goto(base+'/deng-lu/');

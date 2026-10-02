@@ -112,12 +112,14 @@ function authController(string $path): void {
         try {
             loginAttempt($admin?'admin':($register?'register':'user'));
             $username=input('username'); $password=(string)field('password');
-            if(!preg_match('/^[a-zA-Z0-9_]{3,32}$/',$username)) throw new DomainException('账号须为 3–32 位英文字母、数字或下划线。');
+            if($register) {
+                if(!preg_match('/^1[3-9][0-9]{9}$/',$username)) throw new DomainException('请输入有效的11位手机号码。');
+            } elseif(!preg_match('/^[a-zA-Z0-9_]{3,32}$/',$username)) throw new DomainException('账号须为 3–32 位英文字母、数字或下划线。');
             if($register) {
                 if(strlen($password)<8 || strlen($password)>72) throw new DomainException('密码须为 8–72 个字节。');
                 if(!hash_equals($password,(string)field('confirm_password'))) throw new DomainException('两次输入的密码不一致。');
-                $phone=input('phone'); validateContactPhone($phone);
-                if(scalar('SELECT id FROM xiu_users WHERE username=?',[$username])) throw new DomainException('这个账号已被使用，请换一个。');
+                $phone=$username;
+                if(scalar('SELECT id FROM xiu_users WHERE username=?',[$username])) throw new DomainException('这个手机号码已注册，请直接登录。');
                 query('INSERT INTO xiu_users (username,password_hash,phone) VALUES (?,?,?)',[$username,password_hash($password,PASSWORD_DEFAULT),$phone]);
                 session_regenerate_id(true); $_SESSION['user_id']=(int)db()->lastInsertId(); flash('注册成功，可以发布信息了。'); redirect(publicPath('user'));
             }
@@ -125,7 +127,7 @@ function authController(string $path): void {
             if(!$account || !$password || !password_verify($password,$account['password_hash']) || (!$admin && !$account['enabled'])) throw new DomainException('账号或密码不正确，或账号已停用。');
             session_regenerate_id(true); $_SESSION[$admin?'admin_id':'user_id']=(int)$account['id']; redirect($admin?adminUrl():publicPath('user'));
         } catch(DomainException $exception) { $error=$exception->getMessage(); }
-        catch(PDOException $exception) { if($exception->getCode()==='23000') $error='这个账号已被使用，请换一个。'; else throw $exception; }
+        catch(PDOException $exception) { if($exception->getCode()==='23000') $error=$register?'这个手机号码已注册，请直接登录。':'这个账号已被使用，请换一个。'; else throw $exception; }
     }
     render('auth',['title'=>($admin?'后台登录':($register?'注册账号':'登录')).' · '.siteName(),'admin'=>$admin,'register'=>$register,'error'=>$error]);
 }

@@ -1,7 +1,7 @@
 const {chromium}=require('C:/Users/Administrator/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
 const fs=require('fs'),assert=require('assert'),base='http://www.xiu.cn',out='tests/artifacts/';
-const token='xiuqa_'+Date.now(),username=token+'_region',password='QARegion2026',checks=[];
-const fixtures={token,users:[username],listings:[],articles:[],categories:[],cities:[],districts:[]};
+const token='xiuqa_'+Date.now(),username='139'+String(Date.now()).slice(-8),password='QARegion2026',checks=[];
+const fixtures={token,users:[username],mobile_accounts:{[username]:password},listings:[],articles:[],categories:[],cities:[],districts:[]};
 fs.writeFileSync(out+'fixtures.json',JSON.stringify(fixtures));
 const remember=id=>{if(!fixtures.listings.includes(id)){fixtures.listings.push(id);fs.writeFileSync(out+'fixtures.json',JSON.stringify(fixtures));}};
 const pass=(value,label)=>{assert(value,label);checks.push(label);console.log('PASS',label)};
@@ -9,7 +9,7 @@ const pass=(value,label)=>{assert(value,label);checks.push(label);console.log('P
  const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe'});
  try{
   const context=await browser.newContext(),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
-  await page.goto(base+'/zhu-ce/');await page.getByLabel('账号',{exact:true}).fill(username);await page.getByLabel('密码',{exact:true}).fill(password);await page.getByLabel('确认密码',{exact:true}).fill(password);await page.getByLabel('联系电话',{exact:true}).fill('13800000000');
+  await page.goto(base+'/zhu-ce/');await page.getByLabel('手机号码',{exact:true}).fill(username);await page.getByLabel('密码',{exact:true}).fill(password);await page.getByLabel('确认密码',{exact:true}).fill(password);
   await Promise.all([page.waitForURL('**/yong-hu-zhong-xin/'),page.getByRole('button',{name:'注册并登录',exact:true}).click()]);
   const response=await page.goto(base+'/fa-bu-xin-xi/'),source=await response.text();
   await page.locator('[data-publish-category-id="1"]').click();await page.locator('[data-publish-category-id="2"]').click();await page.getByRole('button',{name:'下一步',exact:true}).click();
