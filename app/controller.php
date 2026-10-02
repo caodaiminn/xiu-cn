@@ -83,7 +83,7 @@ function dispatch(): void {
     }
     if($path==='/publish') { publishController(); return; }
     if($path==='/yong-hu-zhong-xin/shua-xin') { memberRefreshController(); return; }
-    if(in_array($path,['/user','/user/listings','/user/verification'],true)) { memberController(['/user'=>'dashboard','/user/listings'=>'listings','/user/verification'=>'verification'][$path]); return; }
+    if(in_array($path,['/user','/user/listings','/user/verification','/user/phone'],true)) { memberController(['/user'=>'dashboard','/user/listings'=>'listings','/user/verification'=>'verification','/user/phone'=>'phone'][$path]); return; }
     if(preg_match('#^/yong-hu-zhong-xin/zheng-jian/(\d+)$#',$path,$match)) { verificationDocumentController((int)$match[1]); return; }
     if($path==='/user/offline') {
         $user=requireUser(); if($method!=='POST') abortPage(405,'请使用下架按钮。');
@@ -113,7 +113,7 @@ function authController(string $path): void {
             loginAttempt($admin?'admin':($register?'register':'user'));
             $username=input('username'); $password=(string)field('password');
             if($register) {
-                if(!preg_match('/^1[3-9][0-9]{9}$/',$username)) throw new DomainException('请输入有效的11位手机号码。');
+                validateMobileNumber($username);
             } elseif(!preg_match('/^[a-zA-Z0-9_]{3,32}$/',$username)) throw new DomainException('账号须为 3–32 位英文字母、数字或下划线。');
             if($register) {
                 if(strlen($password)<8 || strlen($password)>72) throw new DomainException('密码须为 8–72 个字节。');

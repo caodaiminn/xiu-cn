@@ -54,7 +54,7 @@ function publicFilters(array $routeFilters): array {
 /** Resolve new public paths to controller routes. POST aliases remain usable. */
 function resolveSeoRoute(string $path): string {
     $routeFilters=[]; $path=strtolower($path);
-    $aliases=['/deng-lu'=>'/login','/zhu-ce'=>'/register','/fa-bu-xin-xi'=>'/publish','/yong-hu-zhong-xin'=>'/user','/yong-hu-zhong-xin/xia-jia'=>'/user/offline','/yong-hu-zhong-xin/wo-de-fa-bu'=>'/user/listings','/yong-hu-zhong-xin/shen-fen-ren-zheng'=>'/user/verification','/tui-chu'=>'/logout','/index.php'=>'/'];
+    $aliases=['/deng-lu'=>'/login','/zhu-ce'=>'/register','/fa-bu-xin-xi'=>'/publish','/yong-hu-zhong-xin'=>'/user','/yong-hu-zhong-xin/xia-jia'=>'/user/offline','/yong-hu-zhong-xin/wo-de-fa-bu'=>'/user/listings','/yong-hu-zhong-xin/shen-fen-ren-zheng'=>'/user/verification','/yong-hu-zhong-xin/shou-ji-hao-ma'=>'/user/phone','/tui-chu'=>'/logout','/index.php'=>'/'];
     if(isset($aliases[$path])) return $aliases[$path];
     if($path==='/wang-zhan-di-tu') return '/html-sitemap';
     if(in_array($path,['/cheng-shi-fu-wu','/xuan-ze-cheng-shi.html','/selectcity.html'],true)) return '/cities';

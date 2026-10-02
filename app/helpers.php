@@ -34,6 +34,9 @@ function validateText(string $value,string $label,int $min,int $max): void { $le
 function validateContactPhone(string $phone): void {
     if(!preg_match('/^[0-9+()\- ]{6,32}$/',$phone) || strlen(preg_replace('/[^0-9]/','',$phone))<6) throw new DomainException('请填写有效的联系电话，允许数字、空格、加号、括号和短横线。');
 }
+function validateMobileNumber(string $phone): void {
+    if(!preg_match('/^1[3-9][0-9]{9}$/',$phone)) throw new DomainException('请输入有效的11位手机号码。');
+}
 function statusLabel(string $status): string { return ['pending'=>'待审核','published'=>'已发布','rejected'=>'已驳回','offline'=>'已下架','draft'=>'草稿'][$status]??$status; }
 function kindLabel(string $kind): string { return ['service'=>'维修分类','knowledge'=>'知识库','encyclopedia'=>'百科'][$kind]??'维修分类'; }
 function listingType(string $type): string { return $type==='request'?'求修需求':'维修服务'; }

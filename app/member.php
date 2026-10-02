@@ -1,6 +1,6 @@
 <?php
 function memberUrl(string $section='dashboard',array $params=[]): string {
-    $paths=['dashboard'=>'','listings'=>'wo-de-fa-bu/','verification'=>'shen-fen-ren-zheng/'];
+    $paths=['dashboard'=>'','listings'=>'wo-de-fa-bu/','verification'=>'shen-fen-ren-zheng/','phone'=>'shou-ji-hao-ma/'];
     return publicPath('user').$paths[$section].($params?qs($params):'');
 }
 function verificationStatus(?array $record): string { return $record?(['pending'=>'待审核','approved'=>'已认证','rejected'=>'认证未通过'][$record['status']]??'未认证'):'未认证'; }
@@ -44,9 +44,19 @@ function memberRefreshController(): void {
 function memberController(string $section): void {
     $user=requireUser(); $error='';
     if($_SERVER['REQUEST_METHOD']==='POST') {
-        if($section!=='verification') abortPage(405,'请使用对应的操作表单。');
-        try { submitVerification($user); flash('认证材料已提交，请等待管理员审核。'); redirect(memberUrl('verification')); }
-        catch(DomainException $exception) { $error=$exception->getMessage(); }
+        if(!in_array($section,['verification','phone'],true)) abortPage(405,'请使用对应的操作表单。');
+        if($section==='phone') {
+            try {
+                loginAttempt('member-phone');
+                updateMemberMobile($user,input('phone'),(string)field('password'));
+                session_regenerate_id(true);
+                flash('手机号码已保存，下次请使用新手机号码登录。');
+                redirect(memberUrl('phone'));
+            } catch(DomainException $exception) { $error=$exception->getMessage(); }
+        } else {
+            try { submitVerification($user); flash('认证材料已提交，请等待管理员审核。'); redirect(memberUrl('verification')); }
+            catch(DomainException $exception) { $error=$exception->getMessage(); }
+        }
     }
     $verification=row('SELECT * FROM xiu_user_verifications WHERE user_id=?',[$user['id']]);
     $documents=$verification?verificationFiles((int)$verification['id']):[];
@@ -61,9 +71,35 @@ function memberController(string $section): void {
     $formType=getValue('type',$verification['type']??'personal');
     if(!in_array($formType,['personal','company'],true)) abortPage(404,'认证类型不存在。');
     if($section==='verification') $query=getValue('type')!==''?['type'=>$formType]:[];
+    if($section==='phone') $query=[];
     enforceCanonical(memberUrl($section,$query));
     $joined=(string)scalar('SELECT created_at FROM xiu_users WHERE id=?',[$user['id']]);
-    render('account',['title'=>['dashboard'=>'会员管理中心','listings'=>'我的发布','verification'=>'身份认证'][$section].' · '.siteName(),'memberPage'=>true,'memberSection'=>$section,'memberUser'=>$user,'joined'=>$joined,'verification'=>$verification,'documents'=>$documents,'formType'=>$formType,'error'=>$error,'stats'=>$stats,'status'=>$status,'refreshAvailable'=>refreshAvailable((int)$user['id']),'result'=>compact('items','page','pages','total')]);
+    render('account',['title'=>['dashboard'=>'会员管理中心','listings'=>'我的发布','verification'=>'身份认证','phone'=>'手机号码'][$section].' · '.siteName(),'memberPage'=>true,'memberSection'=>$section,'memberUser'=>$user,'joined'=>$joined,'verification'=>$verification,'documents'=>$documents,'formType'=>$formType,'error'=>$error,'stats'=>$stats,'status'=>$status,'refreshAvailable'=>refreshAvailable((int)$user['id']),'result'=>compact('items','page','pages','total')]);
+}
+function updateMemberMobile(array $user,string $phone,string $password): void {
+    validateMobileNumber($phone);
+    if($password==='') throw new DomainException('请输入当前登录密码。');
+    db()->beginTransaction();
+    try {
+        $account=row('SELECT id,username,phone,password_hash,enabled FROM xiu_users WHERE id=? FOR UPDATE',[$user['id']]);
+        if(!$account || !$account['enabled']) throw new DomainException('账号已停用，请重新登录。');
+        if(!password_verify($password,$account['password_hash'])) throw new DomainException('当前登录密码不正确。');
+        if($account['username']===$phone && $account['phone']===$phone) { db()->commit(); return; }
+        if(scalar('SELECT id FROM xiu_users WHERE id<>? AND (username=? OR phone=?) LIMIT 1',[$account['id'],$phone,$phone])) throw new DomainException('这个手机号码已被其他账号使用，请更换号码。');
+        $backup=ROOT.'/backup/'.date('Y-m-d').'-member-mobile-number/records';
+        if(!is_dir($backup) && !mkdir($backup,0700,true)) throw new DomainException('保存失败，请稍后重试。');
+        $record=['saved_at'=>date(DATE_ATOM),'user_id'=>(int)$account['id'],'previous'=>['username'=>$account['username'],'phone'=>$account['phone']],'new_phone'=>$phone];
+        $stamp=$account['id'].'-'.date('His').'-'.bin2hex(random_bytes(6));
+        $json=json_encode($record,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT|JSON_THROW_ON_ERROR);
+        $sql='UPDATE xiu_users SET username='.db()->quote($account['username']).',phone='.db()->quote($account['phone']).' WHERE id='.(int)$account['id'].' AND username='.db()->quote($phone).' AND phone='.db()->quote($phone).";\n";
+        if(file_put_contents($backup.'/'.$stamp.'.json',$json,LOCK_EX)!==strlen($json) || file_put_contents($backup.'/'.$stamp.'.sql',$sql,LOCK_EX)!==strlen($sql)) throw new DomainException('保存失败，请稍后重试。');
+        query('UPDATE xiu_users SET username=?,phone=? WHERE id=?',[$phone,$phone,$account['id']]);
+        db()->commit();
+    } catch(Throwable $error) {
+        if(db()->inTransaction()) db()->rollBack();
+        if($error instanceof PDOException && ($error->errorInfo[1]??0)===1062) throw new DomainException('这个手机号码已被其他账号使用，请更换号码。');
+        throw $error;
+    }
 }
 function submitVerification(array $user): void {
     $type=input('type'); if(!in_array($type,['personal','company'],true)) throw new DomainException('请选择个人认证或企业认证。');
