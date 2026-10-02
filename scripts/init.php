@@ -10,6 +10,7 @@ if($needsAdmin && (!$adminPassword || strlen($adminPassword)<8 || strlen($adminP
 foreach(explode(';',file_get_contents(ROOT.'/database/schema.sql')) as $statement) if(trim($statement)) db()->exec(trim($statement));
 foreach(explode(';',file_get_contents(ROOT.'/database/crawler-schema.sql')) as $statement) if(trim($statement)) db()->exec(trim($statement));
 query('INSERT IGNORE INTO xiu_crawler_tracking (id,started_at) VALUES (1,?)',[date('Y-m-d H:i:s')]);
+db()->exec(file_get_contents(ROOT.'/database/friend-links.sql'));
 db()->beginTransaction();
 try {
     if($needsAdmin) query('INSERT INTO xiu_admins (username,password_hash) VALUES (?,?)',['daiit',password_hash($adminPassword,PASSWORD_DEFAULT)]);

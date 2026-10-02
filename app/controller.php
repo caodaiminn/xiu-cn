@@ -16,7 +16,7 @@ function dispatch(): void {
         $section=defined('ADMIN_ENTRY')?getValue('section','dashboard'):($adminMatch[1]??'dashboard');
         $GLOBALS['path']='/dgadmin'.($section==='dashboard'?'':'/'.$section);
         header('X-Robots-Tag: noindex, nofollow');
-        if(!in_array($section,['dashboard','login','logout','categories','cities','districts','users','listings','articles','settings','verifications','navigation','notifications','ai','document','media'],true)) abortPage(404,'后台页面不存在。');
+        if(!in_array($section,['dashboard','login','logout','categories','cities','districts','users','listings','articles','settings','verifications','navigation','friendlinks','notifications','ai','document','media'],true)) abortPage(404,'后台页面不存在。');
         if(!defined('ADMIN_ENTRY') && in_array($method,['GET','HEAD'],true)) { header('Location: '.adminUrl($section,$_GET),true,301); return; }
         if($section==='login') { authController('/dgadmin/login'); return; }
         if($section==='logout') {
@@ -180,6 +180,7 @@ function adminController(string $section): void {
     requireAdmin();
     if($section==='ai') { adminAiController(); return; }
     if($section==='navigation') { adminNavigationController(); return; }
+    if($section==='friendlinks') { adminFriendLinksController(); return; }
     if($section==='notifications') { adminMailController(); return; }
     if(!in_array($section,['dashboard','categories','cities','districts','users','listings','articles','settings','verifications'],true)) abortPage(404,'后台页面不存在。');
     $error='';

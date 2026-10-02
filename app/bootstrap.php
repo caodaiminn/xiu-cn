@@ -36,4 +36,5 @@ require ROOT . '/app/admin-listings.php';
 require ROOT . '/app/mail.php';
 require ROOT . '/app/ai.php';
 require ROOT . '/app/crawlers.php';
+require ROOT . '/app/friend-links.php';
 registerCrawlerTracking();

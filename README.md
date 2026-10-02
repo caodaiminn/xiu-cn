@@ -313,6 +313,12 @@ Nginx 已配置 `client_max_body_size 32m`、PHP 上传 5MB/总提交 32MB、前
 
 新增检查脚本 `tests/publish-region-ui.cjs`，执行后运行 `tests/cleanup.php`，不要在未清理时覆盖 `fixtures.json`。结果在 `tests/artifacts/publish-region-ui-results.json`，截图以 `publish-region-` 开头。旧 `tests/category-publish-ui.cjs` 同步加入省份选择。恢复备份在 `backup/2026-10-01-publish-region-selector/`。
 
+## 友情链接
+
+后台 `/dgadmin/index.php?section=friendlinks`（侧栏“友情链接”）支持新增、编辑网站名称和HTTP/HTTPS地址、数字排序或上移/下移、启停、删除及设置新窗口/当前窗口。已启用链接在公开页面页脚按排序展示；未配置时隐藏整个友情链接区域。新窗口使用 `noopener`，名称和地址经过转义，不默认加入nofollow。保存后立即使公开数据缓存失效；后台需管理员和CSRF验证。写入前保存完整友情链接快照至 `backup/{日期}-friend-links/records/`，操作采用数据库事务。
+
+新表位于 `database/friend-links.sql`，初始化包含该表；现有站点升级执行 `php scripts/migrate-friend-links.php`，先备份既有结构与记录，不添加默认合作网站。通过 `node tests/friend-links.cjs` 的30项新增、编辑、排序、隐藏、删除、即时更新、URL校验、CSRF、权限、文字转义及1440/390/320px布局检查，模拟链接和会话已清理。结果为 `tests/artifacts/friend-links-results.json`，源码恢复备份为 `backup/2026-10-02-friend-links/`。本次已在本机生效，线上仍待部署。
+
 ## 运营概览的搜索蜘蛛与AI抓取监测
 
 后台 `/dgadmin/index.php?section=dashboard` 增加爬虫统计，支持今天、昨天、本周和本月。北京时间自然日，本周从周一开始，本月从1日开始；今天/昨天显示每小时趋势，本周/本月显示每日趋势。显示总次数、搜索蜘蛛、AI抓取与访问、异常返回，以及各爬虫的次数、去重地址数、2xx成功、3xx跳转、4xx/5xx异常和最近抓取时间；明细按爬虫筛选、每页20条，保留时间范围和筛选条件。原有信息、用户和文章卡片仍为全站累计数据。
