@@ -77,6 +77,8 @@ try {
 
 空调品牌示例信息：`scripts/seed-air-conditioner-brand-listings.php` 默认只预览，添加 `--apply` 后在每个已启用城市、每个品牌目录分类各补8条（维修服务与求修需求各4条）。本地新增78,600条，覆盖393个城市及25个品牌分类，正文242–270字，说明设备故障、服务项目、维修需求与城市范围；沿用 `is_demo=1`，不提供真实联系电话或品牌授权声明。脚本写入前完整备份数据库，按城市提交事务，以 `xiu_local_test_seeds` 的城市/分类/槽位防止重复，重复执行新增0条；恢复材料保存在 `backup/{日期}-air-conditioner-brand-listings/`。已核对全部组合与原288,889条信息内容一致，并通过17项页面检查，报告位于 `reports/seeds/ac-brand-listings-verification.json` 和 `ac-brand-pages-verification.json`。
 
+空调品牌旧详情链接兼容：最初一批示例信息的短地址前缀含数字，与原路由格式不匹配；改为纯字母前缀后仍需保留旧链接。现通过 `xiu_listing_slug_aliases` 将78,600个旧地址映射到原信息，详情控制器按现有规则301跳转到规范地址，既有信息和新地址不变。新安装包含 `scripts/migrate-listing-slug-aliases.php`；已有库运行该迁移建表，旧地址映射可用 `scripts/import-brand-listing-url-aliases.php <rollback-url-repair.sql> --apply` 从本地恢复记录导入，默认只预览，事务提交并备份原映射及新增项回退SQL，重复运行新增0条。用户反馈地址 `ab0b406a2025.html` 已恢复访问。本地核验78,600组新旧路由、全部城市/品牌各8条、367,489条既有信息内容哈希不变，并通过65组地址的197项HTTP/浏览器检查；复验 `tests/brand-listing-aliases.php` 与 `tests/brand-listing-aliases-http.cjs`，报告位于 `tests/artifacts/brand-listing-aliases-results.json` 及 `brand-listing-aliases-http-results.json`。恢复材料保留在 `backup/2026-10-02-brand-listing-old-links/`，映射数据与备份不上传GitHub。
+
 注册联系电话：注册页新增必填的手机号或固定电话，保存在 `xiu_users.phone`；新发布维修服务或求修需求时自动带出，可继续修改。编辑信息使用该信息原有电话，提交失败保留用户输入；发布时修改电话不会修改账号电话。原账号电话默认留空，登录及发布流程保持可用。新安装已纳入初始化，旧数据库先运行 `scripts/migrate-user-phone.php` 再部署页面源码；迁移先备份用户表，重复运行不改数据。已通过18项注册与回填检查，覆盖号码校验、保存、重新登录、手动改号、失败回填、已有信息及老账号兼容、1440px/390px/320px布局；运行 `node tests/register-phone.cjs` 复验，结果为 `tests/artifacts/register-phone-results.json`。
 
 ## 发布描述的AI生成

@@ -58,9 +58,15 @@ function resolveSeoRoute(string $path): string {
     if(isset($aliases[$path])) return $aliases[$path];
     if($path==='/wang-zhan-di-tu') return '/html-sitemap';
     if(in_array($path,['/cheng-shi-fu-wu','/xuan-ze-cheng-shi.html','/selectcity.html'],true)) return '/cities';
-    if(preg_match('#^/(wei-xiu-xin-xi|wei-xiu-zhi-shi-ku|wei-xiu-bai-ke)/([a-z]{1,8}[0-9]{4})\.html$#',$path,$match)) {
+    if(preg_match('#^/(wei-xiu-xin-xi|wei-xiu-zhi-shi-ku|wei-xiu-bai-ke)/([a-z][a-z0-9]{0,7}[0-9]{4})\.html$#',$path,$match)) {
         $table=$match[1]==='wei-xiu-xin-xi'?'xiu_listings':'xiu_articles';
         $record=row('SELECT id, '.($table==='xiu_articles'?'kind':'type').' FROM '.$table.' WHERE short_slug=?',[$match[2]]);
+        if(!$record && $table==='xiu_listings') {
+            // Preserve shared URLs; the detail controller redirects to the canonical URL.
+            static $hasAliases=null;
+            $hasAliases??=(bool)scalar("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name='xiu_listing_slug_aliases'");
+            if($hasAliases) $record=row('SELECT l.id,l.type FROM xiu_listing_slug_aliases a JOIN xiu_listings l ON l.id=a.listing_id WHERE a.slug=?',[$match[2]]);
+        }
         if(!$record || ($table==='xiu_articles' && $record['kind']!==($match[1]==='wei-xiu-bai-ke'?'encyclopedia':'knowledge'))) abortPage(404,'内容不存在。');
         return $table==='xiu_listings'?'/info/'.$record['id']:($record['kind']==='encyclopedia'?'/baike/':'/baixiuquan/').$record['id'].'.html';
     }

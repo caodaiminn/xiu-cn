@@ -68,6 +68,7 @@ try {
     }
     db()->commit();
     require ROOT.'/scripts/migrate-seo.php';
+    require ROOT.'/scripts/migrate-listing-slug-aliases.php';
     require ROOT.'/scripts/migrate-category-navigation.php';
 require ROOT.'/scripts/migrate-city-directory.php';
     require ROOT.'/scripts/migrate-member-center.php';
