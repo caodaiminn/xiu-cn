@@ -116,8 +116,9 @@ function authController(string $path): void {
             if($register) {
                 if(strlen($password)<8 || strlen($password)>72) throw new DomainException('密码须为 8–72 个字节。');
                 if(!hash_equals($password,(string)field('confirm_password'))) throw new DomainException('两次输入的密码不一致。');
+                $phone=input('phone'); validateContactPhone($phone);
                 if(scalar('SELECT id FROM xiu_users WHERE username=?',[$username])) throw new DomainException('这个账号已被使用，请换一个。');
-                query('INSERT INTO xiu_users (username,password_hash) VALUES (?,?)',[$username,password_hash($password,PASSWORD_DEFAULT)]);
+                query('INSERT INTO xiu_users (username,password_hash,phone) VALUES (?,?,?)',[$username,password_hash($password,PASSWORD_DEFAULT),$phone]);
                 session_regenerate_id(true); $_SESSION['user_id']=(int)db()->lastInsertId(); flash('注册成功，可以发布信息了。'); redirect(publicPath('user'));
             }
             $account=row('SELECT * FROM '.($admin?'xiu_admins':'xiu_users').' WHERE username=?',[$username]);
@@ -138,7 +139,7 @@ function publishController(): void {
             $title=input('title'); $body=input('body'); $address=input('address'); $contact=input('contact'); $phone=input('phone'); $type=input('type'); $category=(int)input('category_id'); $city=(int)input('city_id');
             $district=(int)input('district_id');
             validateText($title,'标题',5,120); validateText($body,'详细描述',10,20000); validateText($address,'服务地址',2,255); validateText($contact,'联系人',1,64);
-            if(!preg_match('/^[0-9+()\-\s]{6,32}$/',$phone)) throw new DomainException('请填写有效的联系电话，允许数字、空格、加号和短横线。');
+            validateContactPhone($phone);
             if(!in_array($type,['service','request'],true)) throw new DomainException('请选择信息类型。');
             $selectedCity=row('SELECT id,province FROM xiu_cities WHERE id=? AND enabled=1',[$city]);
             if(!in_array($category,categoryIds('service'),true) || !$selectedCity) throw new DomainException('请选择已开通的分类和城市。');

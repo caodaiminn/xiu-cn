@@ -44,7 +44,7 @@ try:
  check(category_data['name'] not in guest.get(panel)[1],'Navigation hiding persists')
  admin.post('/dgadmin/categories/',{**category_data,'id':category})
  check(category_data['name'] in guest.get(panel)[1],'Navigation restored')
- name=TOKEN+'_nav';user.post('/zhu-ce/',{'username':name,'password':'QANavigation2026','confirm_password':'QANavigation2026'});remember('users',name)
+ name=TOKEN+'_nav';user.post('/zhu-ce/',{'username':name,'password':'QANavigation2026','confirm_password':'QANavigation2026','phone':'13800000000'});remember('users',name)
  form=user.get('/fa-bu-xin-xi/')[1];check('id="listing-city"' in form and 'id="listing-district"' in form,'Publisher can select city and district')
  data={'title':TOKEN+' category district listing','type':'service','category_id':category,'city_id':city,'district_id':district,'address':'QA district address','contact':'QA contact','phone':'00000000000','body':'QA test body for category district navigation, not a real service.'}
  wrong=user.post('/fa-bu-xin-xi/',{**data,'city_id':6});check('所选城市' in wrong[1],'Forged city/district combination rejected')

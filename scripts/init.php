@@ -71,6 +71,7 @@ try {
     require ROOT.'/scripts/migrate-category-navigation.php';
 require ROOT.'/scripts/migrate-city-directory.php';
     require ROOT.'/scripts/migrate-member-center.php';
+    require ROOT.'/scripts/migrate-user-phone.php';
     require ROOT.'/scripts/migrate-member-refresh.php';
     require ROOT.'/scripts/migrate-listing-category-index.php';
     require ROOT.'/scripts/migrate-mail-notifications.php';

@@ -75,6 +75,10 @@ try {
 
 空调维修新增25个三级子分类：24个品牌（小米、格力、美的、海尔、海信、奥克斯、TCL、长虹、科龙、华凌、卡萨帝、统帅、松下、大金、三菱电机、三菱重工、日立、东芝、富士通、三星、LG、志高、约克、开利）及“其他品牌空调”，保留原有家用空调和中央空调。品牌名称和稳定全拼地址位于 `app/data/air-conditioner-brands.json`；已有库或新部署初始化后运行 `scripts/add-air-conditioner-brands.php` 添加。脚本先备份分类，再在事务中插入，重复执行保留已有分类的排序、状态和导航设置，恢复快照和仅针对新增ID的回退SQL位于 `backup/{日期}-air-conditioner-brand-categories/`。前台列表、首页分类、后台编辑及会员发布三级选择直接使用这些分类。本地已核对25个地址正常、159条原分类未改变、重复运行新增0项，以及1440px/390px/320px发布选择布局；结果位于 `tests/artifacts/air-conditioner-brands-results.json`。
 
+空调品牌示例信息：`scripts/seed-air-conditioner-brand-listings.php` 默认只预览，添加 `--apply` 后在每个已启用城市、每个品牌目录分类各补8条（维修服务与求修需求各4条）。本地新增78,600条，覆盖393个城市及25个品牌分类，正文242–270字，说明设备故障、服务项目、维修需求与城市范围；沿用 `is_demo=1`，不提供真实联系电话或品牌授权声明。脚本写入前完整备份数据库，按城市提交事务，以 `xiu_local_test_seeds` 的城市/分类/槽位防止重复，重复执行新增0条；恢复材料保存在 `backup/{日期}-air-conditioner-brand-listings/`。已核对全部组合与原288,889条信息内容一致，并通过17项页面检查，报告位于 `reports/seeds/ac-brand-listings-verification.json` 和 `ac-brand-pages-verification.json`。
+
+注册联系电话：注册页新增必填的手机号或固定电话，保存在 `xiu_users.phone`；新发布维修服务或求修需求时自动带出，可继续修改。编辑信息使用该信息原有电话，提交失败保留用户输入；发布时修改电话不会修改账号电话。原账号电话默认留空，登录及发布流程保持可用。新安装已纳入初始化，旧数据库先运行 `scripts/migrate-user-phone.php` 再部署页面源码；迁移先备份用户表，重复运行不改数据。已通过18项注册与回填检查，覆盖号码校验、保存、重新登录、手动改号、失败回填、已有信息及老账号兼容、1440px/390px/320px布局；运行 `node tests/register-phone.cjs` 复验，结果为 `tests/artifacts/register-phone-results.json`。
+
 ## 发布描述的AI生成
 
 后台 [AI生成设置](http://www.xiu.cn/dgadmin/index.php?section=ai) 可开启或关闭功能、填写智谱 API Key、选择常用模型或直接填写自定义模型 ID，以及设置每位会员每天的生成次数（默认20次，范围1–200次；每分钟最多3次，请求计次）。初始关闭且未配置密钥；填入真实密钥、选定账户支持的模型并开启后，“发布服务或需求”的“详细描述”右侧可点击“AI生成”。按当前标题及信息类型生成约200–400字的维修服务或求修需求说明，生成后可继续修改，再提交原有审核流程。已有描述替换前确认；失败保留原文，生成期间手动修改标题、类型或正文时保留当前内容。禁用JavaScript时仍可手动发布。

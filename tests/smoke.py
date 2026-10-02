@@ -65,10 +65,10 @@ try:
     check(guest.request('/register/', {'username':'bad','password':'12345678'})[0] == 403, 'CSRF required')
     for client, suffix in [(user,'a'),(other,'b')]:
         name=TOKEN+'_'+suffix
-        result=client.post('/register/', {'username':name,'password':'QATestPass2026','confirm_password':'QATestPass2026'})
+        result=client.post('/register/', {'username':name,'password':'QATestPass2026','confirm_password':'QATestPass2026','phone':'13800000000'})
         remember('users',name)
         check('/yong-hu-zhong-xin/' in result[2], 'Register and login ' + suffix)
-    check('已被使用' in guest.post('/register/', {'username':TOKEN+'_a','password':'QATestPass2026','confirm_password':'QATestPass2026'})[1], 'Duplicate username rejected')
+    check('已被使用' in guest.post('/register/', {'username':TOKEN+'_a','password':'QATestPass2026','confirm_password':'QATestPass2026','phone':'13800000000'})[1], 'Duplicate username rejected')
     check('账号或密码不正确' in guest.post('/login/', {'username':'daiit','password':'invalid-password'})[1], 'Invalid credentials rejected')
     services = user.request('/publish/')[1]
     category = re.search(r'<select name="category_id".*?<option value="(\d+)"', services, re.S).group(1)

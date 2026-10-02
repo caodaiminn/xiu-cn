@@ -39,7 +39,7 @@ fs.mkdirSync(artifacts, { recursive: true });
     await page.goto(base+'/register/');
     await page.getByLabel('账号',{exact:true}).fill(username);
     await page.getByLabel('密码',{exact:true}).fill('UITestPassword2026');
-    await page.getByLabel('确认密码',{exact:true}).fill('UITestPassword2026');
+    await page.getByLabel('确认密码',{exact:true}).fill('UITestPassword2026');await page.getByLabel('联系电话',{exact:true}).fill('13800000000');
     await Promise.all([page.waitForURL('**/yong-hu-zhong-xin/'),page.getByRole('button',{name:'注册并登录',exact:true}).click()]);
     fixtures.users.push(username);
     fs.writeFileSync(path.join(artifacts,'fixtures.json'),JSON.stringify(fixtures));

@@ -8,7 +8,7 @@ function csrfField(): string { return '<input type="hidden" name="csrf" value="'
 function checkCsrf(): void { if (!hash_equals(csrf(),input('csrf'))) abortPage(403,'操作已过期，请刷新页面后重试。'); }
 function redirect(string $url): void { header('Location: '.$url, true,303); exit; }
 function flash(string $message,string $type='success'): void { $_SESSION['flash']=['message'=>$message,'type'=>$type]; }
-function currentUser(): ?array { static $loaded=false,$user=null; if (!$loaded) { $loaded=true; $user=!empty($_SESSION['user_id'])?row('SELECT id,username,enabled FROM xiu_users WHERE id=? AND enabled=1',[$_SESSION['user_id']]):null; } return $user; }
+function currentUser(): ?array { static $loaded=false,$user=null; if (!$loaded) { $loaded=true; $user=!empty($_SESSION['user_id'])?row('SELECT id,username,phone,enabled FROM xiu_users WHERE id=? AND enabled=1',[$_SESSION['user_id']]):null; } return $user; }
 function currentAdmin(): ?array { static $loaded=false,$admin=null; if (!$loaded) { $loaded=true; $admin=!empty($_SESSION['admin_id'])?row('SELECT id,username FROM xiu_admins WHERE id=?',[$_SESSION['admin_id']]):null; } return $admin; }
 function requireUser(): array { $user=currentUser(); if (!$user) { flash('请先登录后发布或管理信息。','notice'); redirect(publicPath('login')); } return $user; }
 function adminUrl(string $section='dashboard',array $params=[]): string {
@@ -31,6 +31,9 @@ function render(string $template,array $data=[]): void {
 }
 function abortPage(int $status,string $message): void { http_response_code($status); render('error',['title'=>$status.' · '.siteName(),'message'=>$message]); exit; }
 function validateText(string $value,string $label,int $min,int $max): void { $length=mb_strlen($value); if ($length<$min || $length>$max) throw new DomainException($label.'须为 '.$min.'–'.$max.' 个字符。'); }
+function validateContactPhone(string $phone): void {
+    if(!preg_match('/^[0-9+()\- ]{6,32}$/',$phone) || strlen(preg_replace('/[^0-9]/','',$phone))<6) throw new DomainException('请填写有效的联系电话，允许数字、空格、加号、括号和短横线。');
+}
 function statusLabel(string $status): string { return ['pending'=>'待审核','published'=>'已发布','rejected'=>'已驳回','offline'=>'已下架','draft'=>'草稿'][$status]??$status; }
 function kindLabel(string $kind): string { return ['service'=>'维修分类','knowledge'=>'知识库','encyclopedia'=>'百科'][$kind]??'维修分类'; }
 function listingType(string $type): string { return $type==='request'?'求修需求':'维修服务'; }
