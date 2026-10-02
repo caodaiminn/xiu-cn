@@ -313,6 +313,12 @@ Nginx 已配置 `client_max_body_size 32m`、PHP 上传 5MB/总提交 32MB、前
 
 新增检查脚本 `tests/publish-region-ui.cjs`，执行后运行 `tests/cleanup.php`，不要在未清理时覆盖 `fixtures.json`。结果在 `tests/artifacts/publish-region-ui-results.json`，截图以 `publish-region-` 开头。旧 `tests/category-publish-ui.cjs` 同步加入省份选择。恢复备份在 `backup/2026-10-01-publish-region-selector/`。
 
+## 房屋、防水维修子分类
+
+2026-10-02按用户清单覆盖23项二级分类：地基、梁、板、柱加固，屋面、外墙、地下室、卫生间防水，墙面、地面、门窗、吊顶维修，给排水、强弱电、暖通、消防、电梯维修，小区道路、围墙、管网、化粪池维修，以及内墙刮胶、外墙刮胶。沿用“门窗维修”和“墙面修复”，实际新增21项；原184个分类的名称、层级、排序和开关保持不变。首页导航保持每行5项，后台分类管理和会员发布同步读取数据库。
+
+分类清单为 `app/data/house-repair-categories.json`；`scripts/add-house-repair-categories.php` 默认预览，加 `--apply` 执行。写入前保存完整分类快照和准确新增ID的恢复SQL，重复执行新增0项。通过 `node tests/house-repair-categories.cjs` 的58项公开页面、首页布局、发布选择与后台编辑检查，以及原分类快照核对；已查看桌面和手机截图。备份位于 `backup/2026-10-02-house-repair-categories/`，检查结果为 `tests/artifacts/house-repair-categories-results.json`。本次仅添加本机分类，没有生成新信息。
+
 ## 发布表单分级分类选择
 
 发布维修服务或求修需求时，先进入“选择行业”，通过按钮选择一级大类和对应的二级分类，选中项显示橙色。有三级分类时可继续细分；没有下级的一级分类可以直接使用。桌面按五列、平板三列、手机两列展示，长分类名称自动换行。分类来自后台当前启用的维修分类，新增、排序和停用后自动同步，无需另行维护发布页。
