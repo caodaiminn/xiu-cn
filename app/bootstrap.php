@@ -35,3 +35,5 @@ require ROOT . '/app/member.php';
 require ROOT . '/app/admin-listings.php';
 require ROOT . '/app/mail.php';
 require ROOT . '/app/ai.php';
+require ROOT . '/app/crawlers.php';
+registerCrawlerTracking();

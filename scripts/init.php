@@ -8,6 +8,8 @@ $needsAdmin=!$hasAdmins || !(bool)scalar("SELECT COUNT(*) FROM xiu_admins WHERE 
 $adminPassword=getenv('XIU_ADMIN_PASSWORD');
 if($needsAdmin && (!$adminPassword || strlen($adminPassword)<8 || strlen($adminPassword)>72)) exit("Set XIU_ADMIN_PASSWORD to the initial administrator password (8-72 bytes), then run again.\n");
 foreach(explode(';',file_get_contents(ROOT.'/database/schema.sql')) as $statement) if(trim($statement)) db()->exec(trim($statement));
+foreach(explode(';',file_get_contents(ROOT.'/database/crawler-schema.sql')) as $statement) if(trim($statement)) db()->exec(trim($statement));
+query('INSERT IGNORE INTO xiu_crawler_tracking (id,started_at) VALUES (1,?)',[date('Y-m-d H:i:s')]);
 db()->beginTransaction();
 try {
     if($needsAdmin) query('INSERT INTO xiu_admins (username,password_hash) VALUES (?,?)',['daiit',password_hash($adminPassword,PASSWORD_DEFAULT)]);

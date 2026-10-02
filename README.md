@@ -313,6 +313,18 @@ Nginx 已配置 `client_max_body_size 32m`、PHP 上传 5MB/总提交 32MB、前
 
 新增检查脚本 `tests/publish-region-ui.cjs`，执行后运行 `tests/cleanup.php`，不要在未清理时覆盖 `fixtures.json`。结果在 `tests/artifacts/publish-region-ui-results.json`，截图以 `publish-region-` 开头。旧 `tests/category-publish-ui.cjs` 同步加入省份选择。恢复备份在 `backup/2026-10-01-publish-region-selector/`。
 
+## 运营概览的搜索蜘蛛与AI抓取监测
+
+后台 `/dgadmin/index.php?section=dashboard` 增加爬虫统计，支持今天、昨天、本周和本月。北京时间自然日，本周从周一开始，本月从1日开始；今天/昨天显示每小时趋势，本周/本月显示每日趋势。显示总次数、搜索蜘蛛、AI抓取与访问、异常返回，以及各爬虫的次数、去重地址数、2xx成功、3xx跳转、4xx/5xx异常和最近抓取时间；明细按爬虫筛选、每页20条，保留时间范围和筛选条件。原有信息、用户和文章卡片仍为全站累计数据。
+
+识别百度、谷歌、必应、搜狗、360、Yandex、DuckDuckGo、Yahoo、Apple及GPTBot、OAI-SearchBot、ChatGPT-User、Claude、Perplexity、Bytespider、Amazonbot、Meta和Common Crawl等UA标识，按训练、搜索或用户触发用途分别展示。参考[Google官方说明](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers)、[Bing官方说明](https://www.bing.com/webmasters/help/help/which-crawlers-does-bing-use-8c184ec0)、[OpenAI官方说明](https://developers.openai.com/api/docs/bots)、[Anthropic官方说明](https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler)、[Perplexity官方说明](https://docs.perplexity.ai/docs/resources/perplexity-crawlers)、[Amazon官方说明](https://developer.amazon.com/amazonbot)和[Common Crawl说明](https://blog.commoncrawl.org/ccbot)。Google-Extended仅为控制标识，没有独立HTTP UA，因此不虚构独立的Gemini抓取数。按UA识别不等于IP身份认证，抓取次数不代表搜索收录量。
+
+从启用时开始记录到达PHP应用的公开GET/HEAD请求，包含公开页、robots.txt、XML站点地图、规范跳转和404；不记录会员、登录、注册、后台、发布、API及POST请求。路径不保存查询参数，IP沿用已有可信代理规则；爬虫记录不使公开业务缓存失效。静态资源、在CDN或Web服务器层被拦截的访问以及启用前历史日志不在统计范围内。记录失败仅记内部错误，不改变页面响应；查看统计需要管理员登录。
+
+新表结构在 `database/crawler-schema.sql`，新安装由 `scripts/init.php` 创建；升级执行 `php scripts/migrate-crawlers.php`，先备份既有表结构及启用时间行，只创建不存在的表和首次启用记录，不修改既有抓取明细。重复迁移保留首次启用时间。当前本机启用时间为2026-10-02 10:08:56，备份位于 `backup/2026-10-02-crawler-dashboard/`。没有更改服务器全局日志配置或导入多站点共用日志。
+
+通过 `php tests/crawlers.php` 的45项识别、隐私范围和自然日期边界检查，以及 `node tests/crawlers.cjs` 的95项HTTP与后台检查，覆盖请求捕获、正确状态码、时间范围、去重路径、趋势、过滤分页、访问权限、UA转义、CSP和2048/1440/900/390/320px布局。模拟记录和管理员临时会话均已清理，实际抓取表目前为空；结果为 `tests/artifacts/crawlers-model-results.json` 和 `crawlers-ui-results.json`，截图仅为模拟数据验收证据。源码已备份，本次仅在本机启用。
+
 ## 房屋、防水维修子分类
 
 2026-10-02按用户清单覆盖23项二级分类：地基、梁、板、柱加固，屋面、外墙、地下室、卫生间防水，墙面、地面、门窗、吊顶维修，给排水、强弱电、暖通、消防、电梯维修，小区道路、围墙、管网、化粪池维修，以及内墙刮胶、外墙刮胶。沿用“门窗维修”和“墙面修复”，实际新增21项；原184个分类的名称、层级、排序和开关保持不变。首页导航保持每行5项，后台分类管理和会员发布同步读取数据库。

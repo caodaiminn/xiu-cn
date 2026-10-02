@@ -218,7 +218,8 @@ function adminController(string $section): void {
     if($section==='articles') { $total=(int)scalar('SELECT COUNT(*) FROM xiu_articles WHERE kind=?',[$kind]); $pages=max(1,(int)ceil($total/30)); $page=min($page,$pages); $items=rows('SELECT a.*,k.name category_name FROM xiu_articles a JOIN xiu_categories k ON k.id=a.category_id WHERE a.kind=? ORDER BY a.id DESC LIMIT 30 OFFSET '.(($page-1)*30),[$kind]); }
     $stats=[];
     if($section==='dashboard') $stats=['pending'=>(int)scalar("SELECT COUNT(*) FROM xiu_listings WHERE status='pending'"),'listings'=>(int)scalar('SELECT COUNT(*) FROM xiu_listings'),'users'=>(int)scalar('SELECT COUNT(*) FROM xiu_users'),'articles'=>(int)scalar('SELECT COUNT(*) FROM xiu_articles')];
-    render('admin',['title'=>'管理后台 · '.siteName(),'adminPage'=>true,'section'=>$section,'items'=>$items,'record'=>$record,'kind'=>$kind,'error'=>$error,'stats'=>$stats,'result'=>$listingResult??compact('items','total','page','pages')]);
+    $crawlerStats=$section==='dashboard'?crawlerDashboard(getValue('period','today'),getValue('bot'),(int)getValue('crawler_page',1)):null;
+    render('admin',['title'=>'管理后台 · '.siteName(),'adminPage'=>true,'section'=>$section,'items'=>$items,'record'=>$record,'kind'=>$kind,'error'=>$error,'stats'=>$stats,'crawlerStats'=>$crawlerStats,'result'=>$listingResult??compact('items','total','page','pages')]);
 }
 function adminMutation(string $section) {
     $id=(int)input('id'); $action=input('action','save');

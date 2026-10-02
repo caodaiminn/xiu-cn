@@ -1,0 +1,17 @@
+CREATE TABLE IF NOT EXISTS xiu_crawler_tracking (
+ id TINYINT UNSIGNED PRIMARY KEY,
+ started_at DATETIME NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS xiu_crawler_visits (
+ id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+ bot_key VARCHAR(32) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ occurred_at DATETIME NOT NULL,
+ path VARCHAR(1024) NOT NULL,
+ path_hash BINARY(32) NOT NULL,
+ method ENUM('GET','HEAD') NOT NULL,
+ status_code SMALLINT UNSIGNED NOT NULL,
+ ip VARCHAR(45) CHARACTER SET ascii NOT NULL DEFAULT '',
+ user_agent VARCHAR(1024) NOT NULL DEFAULT '',
+ INDEX crawler_period (occurred_at,id),
+ INDEX crawler_bot_period (bot_key,occurred_at,id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
