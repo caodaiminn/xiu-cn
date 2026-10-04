@@ -38,4 +38,5 @@ require ROOT . '/app/ai.php';
 require ROOT . '/app/crawlers.php';
 require ROOT . '/app/friend-links.php';
 require ROOT . '/app/repair-guides.php';
+require ROOT . '/app/repair-category-content.php';
 registerCrawlerTracking();

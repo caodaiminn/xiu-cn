@@ -7,5 +7,6 @@ $guideCards=$guideCategory?repairGuidesForCategory((int)$guideCategory['id']):[]
  <?php if($guideCards): ?><p class="muted">报修前可参考以下 <?= count($guideCards) ?> 篇指南，服务范围及费用请与服务方确认。</p><div class="repair-guide-cards">
  <?php foreach($guideCards as $guideCard): ?><a class="repair-guide-card" href="<?= e(repairGuideUrl($guideCard)) ?>"><span>指南 <?= (int)$guideCard['slot'] ?></span><h3><?= e($guideCard['title']) ?></h3><p><?= e($guideCard['summary']) ?></p><strong>阅读 →</strong></a><?php endforeach ?>
  </div><?php else: ?><p class="muted">选择维修分类，查看问题记录、服务预约、报价核对、验收和日常维护指南。</p><div class="city-tags"><?php foreach(categories() as $guideRoot): if($guideRoot['depth']!==1) continue; ?><a href="<?= e(listUrl(['category'=>$guideRoot['id'],'city'=>$city['id']??0])) ?>"><?= e($guideRoot['name']) ?></a><?php endforeach ?></div><?php endif ?>
+<?php require ROOT.'/views/repair-category-content.php'; ?>
 </section>
 <?php endif ?>

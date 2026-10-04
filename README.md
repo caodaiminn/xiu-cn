@@ -484,6 +484,16 @@ python tests/life-companion-seo-http.py
 & 'D:/phpstudy_pro/Extensions/php/php8.0.2nts/php.exe' tests/repair-guides.php
 ```
 
-详情有标题、摘要、规范链接、Article 和面包屑结构化数据，XML 地图入口 `/sitemap-zhi-nan-1.xml` 已加入 `/sitemap.xml`。不为每个城市复制相同正文；没有真实服务记录的城市分类页仍保持 `noindex, follow`，可通过页面链接发现正式指南，避免重复的空服务列表进入索引。SEO 标记支持抓取和理解，不保证搜索引擎实际收录或排名。
+详情有标题、摘要、规范链接、Article 和面包屑结构化数据，XML 地图入口 `/sitemap-zhi-nan-1.xml` 已加入 `/sitemap.xml`。不为每个城市复制相同正文；2026-10-05起，已有完整分类说明和5篇指南的城市/全国分类第一页允许索引，即使暂时没有服务记录；关键词搜索、空类型/区域筛选和无分类的空列表继续 `noindex, follow`。未伪造商家、报价、电话或求修委托。SEO 标记支持抓取和理解，不保证搜索引擎实际收录或排名。
 
 2026-10-04已发布至 https://www.5pz.cn ，16 个源码文件摘要核验一致，810 篇指南及 965 条关联导入成功，原 6 条真实信息、账号、分类、文章、配置和友情链接的数据核验保持完整。线上更新前数据库及相关源码备份 `/www/backup/2026-10-04-repair-guides/`；本地源码恢复备份 `backup/2026-10-04-repair-guides/`。验收材料 `reports/guides/2026-10-04/`，部署记录 `reports/deploy/2026-10-04-repair-guides/`。
+
+## 城市分类页正文与索引（2026-10-05）
+
+服务信息列表下方保留5个紧凑指南入口，增加分类问题、预约资料、报价项目、验收和维护说明。按现有分类内容组装实际相关的报修要点，展示城市/省份与当前可浏览信息数量；193个分类的核心正文为661至763字（不含地区、链接和标题）。入口 app/repair-category-content.php 和 views/repair-category-content.php。未增加数据库信息或修改商家账号。
+
+具有正文、启用分类与5篇指南的未筛选分类第一页允许索引；暂无服务记录时标题和摘要说明报修指南内容。全国分类页加入原导航地图，75849个城市分类入口按每页1000条输出到 /sitemap-cheng-shi-fen-lei-{页号}.xml，并在 /sitemap.xml 声明；按页直接生成，不一次读取整个城市分类笛卡尔积。停用城市、分类或上级分类后从地图移除，无效分页404。正文仍位于页面底部，小号排版，手机单列。
+
+验证命令：php tests/category-landing-seo.php。开发、部署与页面验收材料保存在 reports/deploy/2026-10-05-category-seo-content/。SEO技术条件与更具体的正文不保证搜索引擎实际收录，仍需观察抓取及搜索平台反馈。
+
+已发布至 https://www.5pz.cn 。本地验证193个分类及75849个城市分类入口；线上抽查北京防水、上海空调、广州小米空调在1440、390、320像素宽度下的正文、索引标记、指南位置和横向溢出，9组页面通过。关键词和空类型筛选保持noindex，站点地图最后一页849条及越界404检查通过。线上源码备份 /www/backup/2026-10-05-category-seo-content-verified/，本次无数据库写入。

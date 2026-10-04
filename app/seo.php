@@ -124,7 +124,11 @@ function pageSeo(string $template,array $data): array {
         if($category) foreach(array_reverse(categoryAncestors((int)$category['id'])) as $categoryId) { $crumbCategory=seoRecord('xiu_categories',$categoryId); $crumbs[]=['name'=>$crumbCategory['name'],'url'=>absoluteUrl(listUrl(array_merge($filters,['category'=>$categoryId,'district'=>0,'q'=>'','type'=>''])))]; }
         if($district) $crumbs[]=['name'=>$district['name'],'url'=>absoluteUrl(listUrl(array_merge($filters,['q'=>'','type'=>''])))];
         if(!empty($filters['q'])) { $seo['title']='搜索“'.seoDescription($filters['q'],30).'” - '.$name; $seo['description']='在'.$name.'查找与“'.$filters['q'].'”相关的维修服务和求修需求。'; $seo['robots']='noindex, follow'; }
-        if(!$data['result']['total']) $seo['robots']='noindex, follow';
+        if(!empty($data['categoryContent'])) {
+            $seo['description']=seoDescription($data['categoryContent']['intro']);
+            if(!$data['result']['total']) $seo['title']=$data['categoryContent']['subject'].'服务信息与报修指南 - '.$name;
+        }
+        if(!$data['result']['total'] && empty($data['categoryContent'])) $seo['robots']='noindex, follow';
         $pageType='CollectionPage';
     }
     elseif($template==='cities') { $seo['title']='全国城市选择 - '.$name; $seo['description']='在'.$name.'选择所在城市，按省份浏览全国城市与地区，查找当地维修服务和求修需求。'; $crumbs[]=['name'=>'选择城市','url'=>absoluteUrl(publicPath('cities'))]; $pageType='CollectionPage'; }

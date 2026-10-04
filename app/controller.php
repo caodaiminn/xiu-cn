@@ -68,7 +68,8 @@ function dispatch(): void {
         $result=listingSearch($filters,$requestedPage); if($requestedPage>$result['pages']) abortPage(404,'这一页没有信息。');
         enforceCanonical(listUrl($filters,$result['page'])); $GLOBALS['collection_context']=['kind'=>'service','filters'=>$filters];
         if($city && (int)(rememberedCityChoice()['id']??-1)!==(int)$city['id']) rememberLocationCity((int)$city['id']);
-        render('listings',['title'=>($city?$city['name'].'维修服务':'分类信息').' · '.siteName(),'filters'=>$filters,'city'=>$city,'result'=>$result,'navigation'=>serviceNavigation($filters['category'])]); return;
+        $categoryContent=$result['page']===1?repairCategoryLandingContent($filters,$city,(int)$result['total']):null;
+        render('listings',['title'=>($city?$city['name'].'维修服务':'分类信息').' · '.siteName(),'filters'=>$filters,'city'=>$city,'result'=>$result,'categoryContent'=>$categoryContent,'navigation'=>serviceNavigation($filters['category'])]); return;
     }
     if($path==='/cities') { enforceCanonical(publicPath('cities')); render('cities',['title'=>'城市服务 · '.siteName()]); return; }
     if(preg_match('#^/info/(\d+)$#',$path,$match)) {
