@@ -497,3 +497,15 @@ python tests/life-companion-seo-http.py
 验证命令：php tests/category-landing-seo.php。开发、部署与页面验收材料保存在 reports/deploy/2026-10-05-category-seo-content/。SEO技术条件与更具体的正文不保证搜索引擎实际收录，仍需观察抓取及搜索平台反馈。
 
 已发布至 https://www.5pz.cn 。本地验证193个分类及75849个城市分类入口；线上抽查北京防水、上海空调、广州小米空调在1440、390、320像素宽度下的正文、索引标记、指南位置和横向溢出，9组页面通过。关键词和空类型筛选保持noindex，站点地图最后一页849条及越界404检查通过。线上源码备份 /www/backup/2026-10-05-category-seo-content-verified/，本次无数据库写入。
+
+## Excel服务数据导入与全国服务范围（2026-10-05）
+
+根据用户提供的《全站维修分类数据_完整版.xlsx》整理服务信息。用户明确确认商家可服务全部393个城市；每条业务只保存一个详情地址，城市列表共同显示全国服务记录。商家联系电话保留原字段，区域显示“全国”，具体上门地址和服务方式仍需与服务方确认。内部city_id仅兼容现有数据结构，不作为商家所在地展示；区域筛选不会把全国服务虚构为某个区县的本地信息。常规用户记录继续按原城市范围展示。
+
+全国范围及源表行号、原标题、原分类、完整来源字段保存在私有xiu_workbook_imports表；app/nationwide-listings.php负责范围读取，停用商家账号、分类或信息下架后同步隐藏。分类地图包含已有完整指南的分类以及有效全国服务的分类与上级，当前313个启用分类、123009个城市分类第一页；每份XML最多1000条，服务详情只提交一份规范地址。
+
+原表1070行经过标题改写、去重及分类纠错，发布869条到202个目标分类，补齐120个分类入口。201条电话缺失、纯产品广告、不相关或重复记录留在隔离报告；标题删除营销堆词和无依据的认证、时限表述，保留业务对象、故障及品牌型号。109个目标分类有至少5条来源信息，93个目标分类不足5条，按实际有效来源数量展示，不制造商家或电话号码来补数。原有6条真实信息逐字段摘要保持不变。
+
+标题预处理：scripts/prepare-workbook-listings.py REPORT_DIRECTORY（目录含source-records.json与当前catalog.json）。导入前先运行php scripts/import-workbook-listings.php --input=PRIVATE_BATCH_JSON；带--apply时先保存完整数据库及精确新增ID回滚记录，再事务写入。重复执行按源表摘要/行号和内容指纹去重，不覆盖已有信息。每个商家账号不自动授予认证；导入账号随机密码，不供公众登录。
+
+验证：php tests/workbook-listings.php PRIVATE_BATCH_JSON。本地与线上各4482项数据和范围检查通过；本地分类正文及地图验证124305项通过。页面验收与分类、原标题/改写标题预览、隔离清单保存在reports/imports/2026-10-05-workbook/，均不进入Git；原Excel保留不动。线上源码与源表备份/www/backup/2026-10-05-workbook-import-verified/，数据备份及回滚记录/www/wwwroot/5pz.cn/backup/2026-10-05-workbook-data/040232-014ce8/。

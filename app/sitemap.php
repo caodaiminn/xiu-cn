@@ -3,7 +3,8 @@ function sitemapContent(string $kind,int $part=0): array {
     if($kind==='zhi-nan') { $guides=repairGuideEntries(); return $part?array_slice($guides,($part-1)*1000,1000):['count'=>count($guides)]; }
     if($kind==='xin-xi') {
         $ids=categoryIds('service');
-        $sql="SELECT l.* FROM xiu_listings l JOIN xiu_cities c ON c.id=l.city_id JOIN xiu_users u ON u.id=l.user_id WHERE l.status='published' AND l.is_demo=0 AND (l.district_id IS NULL OR EXISTS (SELECT 1 FROM xiu_districts d WHERE d.id=l.district_id AND d.city_id=l.city_id AND d.enabled=1)) AND c.enabled=1 AND u.enabled=1 AND l.category_id IN (".implode(',',$ids?:[0]).')';
+        $nationwide=implode(',',nationwideListingIds()?:[0]);
+        $sql="SELECT l.* FROM xiu_listings l JOIN xiu_cities c ON c.id=l.city_id JOIN xiu_users u ON u.id=l.user_id WHERE l.status='published' AND l.is_demo=0 AND (l.district_id IS NULL OR EXISTS (SELECT 1 FROM xiu_districts d WHERE d.id=l.district_id AND d.city_id=l.city_id AND d.enabled=1)) AND (c.enabled=1 OR l.id IN (".$nationwide.")) AND u.enabled=1 AND l.category_id IN (".implode(',',$ids?:[0]).')';
     } else {
         $articleKind=$kind==='bai-ke'?'encyclopedia':'knowledge'; $ids=categoryIds($articleKind);
         $sql="SELECT a.* FROM xiu_articles a WHERE a.status='published' AND a.is_demo=0 AND a.kind=".db()->quote($articleKind).' AND a.category_id IN ('.implode(',',$ids?:[0]).')';
@@ -22,10 +23,11 @@ function sitemapPageEntries(): array {
     if(repairGuidesAvailable()) $entries['/wei-xiu-zhi-nan/']=null;
     foreach(repairCategoryLandingIds() as $categoryId) $entries[listUrl(['category'=>$categoryId])]=null;
     $ids=categoryIds('service');
-    $groups=rows("SELECT l.category_id,l.city_id,l.district_id,l.type,COUNT(*) amount FROM xiu_listings l JOIN xiu_cities c ON c.id=l.city_id JOIN xiu_users u ON u.id=l.user_id WHERE l.status='published' AND l.is_demo=0 AND (l.district_id IS NULL OR EXISTS (SELECT 1 FROM xiu_districts d WHERE d.id=l.district_id AND d.city_id=l.city_id AND d.enabled=1)) AND c.enabled=1 AND u.enabled=1 AND l.category_id IN (".implode(',',$ids?:[0]).') GROUP BY l.category_id,l.city_id,l.district_id,l.type');
+    $nationwide=implode(',',nationwideListingIds()?:[0]);
+    $groups=rows("SELECT l.category_id,l.city_id,l.district_id,l.type,(l.id IN (".$nationwide.")) nationwide,COUNT(*) amount FROM xiu_listings l JOIN xiu_cities c ON c.id=l.city_id JOIN xiu_users u ON u.id=l.user_id WHERE l.status='published' AND l.is_demo=0 AND (l.district_id IS NULL OR EXISTS (SELECT 1 FROM xiu_districts d WHERE d.id=l.district_id AND d.city_id=l.city_id AND d.enabled=1)) AND (c.enabled=1 OR l.id IN (".$nationwide.")) AND u.enabled=1 AND l.category_id IN (".implode(',',$ids?:[0]).') GROUP BY l.category_id,l.city_id,l.district_id,l.type,nationwide');
     foreach($groups as $group) {
         $categoryIds=array_merge([0],categoryAncestors((int)$group['category_id']));
-        foreach([0,(int)$group['city_id']] as $cityId) foreach($categoryIds as $categoryId) foreach(['',$group['type']] as $type) foreach(array_unique([0,(int)$group['district_id']]) as $districtId) {
+        foreach($group['nationwide']?[0]:[0,(int)$group['city_id']] as $cityId) foreach($categoryIds as $categoryId) foreach(['',$group['type']] as $type) foreach(array_unique([0,(int)$group['district_id']]) as $districtId) {
             if($districtId && !$cityId) continue;
             $filters=['city'=>$cityId,'category'=>$categoryId,'district'=>$districtId,'type'=>$type]; $url=listUrl($filters);
             if(!isset($counts[$url])) $counts[$url]=['kind'=>'service','filters'=>$filters,'count'=>0];

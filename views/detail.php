@@ -6,7 +6,7 @@ $phoneMarkup=function(string $class) use ($item,$phoneTarget): string {
     $text=e($item['phone']); $class=e($class);
     return $item['is_demo']?'<span class="'.$class.'">'.$text.'</span>':'<a class="'.$class.'" href="'.e($phoneTarget).'">'.$text.'</a>';
 };
-$context=['city'=>$item['city_id'],'district'=>$item['district_id']??0,'category'=>$item['category_id']];
+$context=['city'=>$item['service_city_id']??$item['city_id'],'district'=>$item['district_id']??0,'category'=>$item['category_id']];
 $relatedItems=array_values(array_filter($related['items'],fn($relatedItem)=>(int)$relatedItem['id']!==(int)$item['id']));
 ?>
 <?php if(!visibleListing($item)): ?><div class="notice">此信息目前<?= statusLabel($item['status']) ?>，仅发布者或管理员可预览。<?php if($item['rejection_reason']): ?> 驳回原因：<?= e($item['rejection_reason']) ?><?php endif ?></div><?php endif ?>
@@ -17,7 +17,7 @@ $relatedItems=array_values(array_filter($related['items'],fn($relatedItem)=>(int
    <div><dt>联系人：</dt><dd><?= e($item['contact']) ?><?php require ROOT.'/views/verification-badge.php'; ?></dd></div>
    <div><dt>联系电话：</dt><dd><?= $phoneMarkup('repair-primary-phone') ?></dd></div>
    <div><dt>维修分类：</dt><dd><a href="<?= e(listUrl($context)) ?>"><?= e($item['category_name']) ?></a></dd></div>
-   <div><dt>服务区域：</dt><dd><a href="<?= e(listUrl(['city'=>$item['city_id'],'district'=>$item['district_id']??0])) ?>"><?= e($region) ?></a></dd></div>
+   <div><dt>服务区域：</dt><dd><a href="<?= e(listUrl(['city'=>$context['city'],'district'=>$item['district_id']??0])) ?>"><?= e($region) ?></a></dd></div>
    <div class="repair-fact-address"><dt><?= $item['type']==='request'?'需求地址':'服务地址' ?>：</dt><dd><?= e($item['address']) ?></dd></div>
   </dl><p class="repair-contact-tip">联系时请说明是在<?= e(siteName()) ?>看到此信息。</p></section>
   <nav class="repair-section-nav" aria-label="信息详情栏目"><a href="#repair-description"><?= $item['type']==='request'?'需求详情':'服务介绍' ?></a><?php if($images): ?><a href="#repair-images">图片展示</a><?php endif ?><a href="#repair-contact">联系方式</a></nav>

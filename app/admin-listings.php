@@ -21,5 +21,5 @@ function adminListingResults(string $status, int $requestedPage, int $perPage): 
     $pages=max(1,(int)ceil($total/$perPage)); $page=min(max(1,$requestedPage),$pages);
     $where=$status!==''?' WHERE l.status=?':''; $params=$status!==''?[$status]:[];
     $items=rows('SELECT l.id,l.user_id,l.category_id,l.city_id,l.type,l.title,l.short_slug,l.seo_slug,l.created_at,l.address,l.contact,l.phone,LEFT(l.body,180) body,l.status,l.rejection_reason,l.is_demo,l.updated_at,u.username,k.name category_name,c.name city_name FROM xiu_listings l JOIN xiu_users u ON u.id=l.user_id JOIN xiu_categories k ON k.id=l.category_id JOIN xiu_cities c ON c.id=l.city_id'.$where.' ORDER BY l.id DESC LIMIT '.$perPage.' OFFSET '.(($page-1)*$perPage),$params);
-    return ['items'=>$items,'total'=>$total,'page'=>$page,'pages'=>$pages,'per_page'=>$perPage,'status'=>$status,'counts'=>$counts];
+    return ['items'=>array_map('listingWithServiceScope',$items),'total'=>$total,'page'=>$page,'pages'=>$pages,'per_page'=>$perPage,'status'=>$status,'counts'=>$counts];
 }

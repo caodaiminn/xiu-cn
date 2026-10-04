@@ -33,7 +33,7 @@ function repairCategoryLandingContent(array $filters,?array $city,int $total): ?
     return ['category'=>$category,'subject'=>$subject,'intro'=>$intro,'status'=>$status,'region'=>$city?($city['province'].' / '.$city['name']):'全国城市可切换','sections'=>$sections,'children'=>$children,'safety'=>$profile['risk']];
 }
 function repairCategoryLandingSitemap(int $part=0): array {
-    $ids=repairCategoryLandingIds();$cities=cityList();$perCity=count($ids);$count=$perCity*count($cities);
+    $ids=array_values(array_unique(array_merge(repairCategoryLandingIds(),nationwideListingCategoryIds())));$cities=cityList();$perCity=count($ids);$count=$perCity*count($cities);
     if(!$part) return ['count'=>$count];
     $entries=[];
     for($index=($part-1)*1000;$index<min($count,$part*1000);$index++) {

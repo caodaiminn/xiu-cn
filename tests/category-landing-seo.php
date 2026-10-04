@@ -25,7 +25,7 @@ foreach([['q'=>'keyword'],['type'=>'service'],['district'=>1],['category'=>0]] a
     landingAssert($seo['robots']==='noindex, follow','Empty/filter robots');
 }
 landingAssert(!repairCategoryLandingEligible(['category'=>234],2),'Duplicate pagination copy');
-$expected=count($categoryIds)*count($cities);
+$expected=count(array_unique(array_merge($categoryIds,nationwideListingCategoryIds())))*count($cities);
 landingAssert(repairCategoryLandingSitemap()['count']===$expected,'Sitemap count');
 $seen=[];$parts=(int)ceil($expected/1000);
 for($part=1;$part<=$parts;$part++) {
@@ -40,6 +40,6 @@ try {
     query('UPDATE xiu_categories SET enabled=0 WHERE id=9');
     landingAssert(!in_array(234,repairCategoryLandingIds(),true),'Disabled category indexed');
     query('UPDATE xiu_cities SET enabled=0 WHERE id=?',[$cities[0]['id']]);
-    landingAssert(repairCategoryLandingSitemap()['count']===(count($cities)-1)*count(repairCategoryLandingIds()),'Disabled city indexed');
+    landingAssert(repairCategoryLandingSitemap()['count']===(count($cities)-1)*count(array_unique(array_merge(repairCategoryLandingIds(),nationwideListingCategoryIds()))),'Disabled city indexed');
 } finally {db()->rollBack();}
 echo json_encode(['passed'=>true,'checks'=>$checks,'categories'=>count($categoryIds),'city_category_urls'=>$expected,'min_content_chars'=>min($lengths),'max_content_chars'=>max($lengths)]),PHP_EOL;

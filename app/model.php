@@ -64,7 +64,7 @@ function serviceNavigation(int $selected): array {
     return ['root'=>$root,'groups'=>$groups,'items'=>$items];
 }
 function visibleListing(array $listing): bool {
-    return $listing['status']==='published' && (bool)scalar('SELECT enabled FROM xiu_cities WHERE id=?',[$listing['city_id']]) && (empty($listing['district_id']) || (bool)scalar('SELECT enabled FROM xiu_districts WHERE id=? AND city_id=?',[$listing['district_id'],$listing['city_id']])) && in_array((int)$listing['category_id'],categoryIds('service'),true) && (bool)scalar('SELECT enabled FROM xiu_users WHERE id=?',[$listing['user_id']]);
+    return $listing['status']==='published' && (in_array((int)$listing['id'],nationwideListingIds(),true) || (bool)scalar('SELECT enabled FROM xiu_cities WHERE id=?',[$listing['city_id']])) && (empty($listing['district_id']) || (bool)scalar('SELECT enabled FROM xiu_districts WHERE id=? AND city_id=?',[$listing['district_id'],$listing['city_id']])) && in_array((int)$listing['category_id'],categoryIds('service'),true) && (bool)scalar('SELECT enabled FROM xiu_users WHERE id=?',[$listing['user_id']]);
 }
 function visibleArticle(array $article): bool { return $article['status']==='published' && in_array((int)$article['category_id'],categoryIds($article['kind']),true); }
 function listingSearch(array $filters, int $page=1, int $perPage=12): array {
@@ -87,8 +87,9 @@ function listingSearchUncached(array $filters,int $page,int $perPage,bool $pagin
     return $eligibility;
     });
     $ids=categoryIds('service',(int)($filters['category']??0));
-    $where=["l.status='published'",'l.city_id IN ('.implode(',',$eligibility['cities']?:[0]).')','l.user_id IN ('.implode(',',$eligibility['users']?:[0]).')','l.category_id IN ('.implode(',', $ids?:[0]).')']; $params=[];
-    if (!empty($filters['city'])) { $where[]='l.city_id=?'; $params[]=(int)$filters['city']; }
+    $nationwideIds=implode(',',nationwideListingIds()?:[0]);
+    $where=["l.status='published'",'(l.city_id IN ('.implode(',',$eligibility['cities']?:[0]).') OR l.id IN ('.$nationwideIds.'))','l.user_id IN ('.implode(',',$eligibility['users']?:[0]).')','l.category_id IN ('.implode(',', $ids?:[0]).')']; $params=[];
+    if (!empty($filters['city'])) { $where[]='(l.city_id=? OR l.id IN ('.$nationwideIds.'))'; $params[]=(int)$filters['city']; }
     $where[]='(l.district_id IS NULL OR EXISTS (SELECT 1 FROM xiu_districts allowed_district WHERE allowed_district.id=l.district_id AND allowed_district.city_id=l.city_id AND allowed_district.enabled=1))';
     if (!empty($filters['district'])) { $where[]='l.district_id=?'; $params[]=(int)$filters['district']; }
     if (!empty($filters['type']) && in_array($filters['type'],['service','request'],true)) { $where[]='l.type=?'; $params[]=$filters['type']; }
@@ -120,9 +121,9 @@ function listingSearchUncached(array $filters,int $page,int $perPage,bool $pagin
     } else $selected=array_map('intval',array_column(rows('SELECT l.id FROM xiu_listings l'.$condition.' ORDER BY l.refresh_order DESC,'.$rank.' DESC,l.id DESC LIMIT '.$perPage.' OFFSET '.(($page-1)*$perPage),$params),'id'));
     $items=[];
     if($selected) {
-        $records=rows('SELECT l.*,c.name city_name,k.name category_name,d.name district_name,v.type verification_type,(SELECT i.id FROM xiu_images i WHERE i.listing_id=l.id ORDER BY i.id LIMIT 1) image_id'.$base.' JOIN xiu_categories k ON k.id=l.category_id'.$verification.$condition.' AND c.enabled=1 AND u.enabled=1 AND l.id IN ('.implode(',',$selected).')',$params);
+        $records=rows('SELECT l.*,c.name city_name,k.name category_name,d.name district_name,v.type verification_type,(SELECT i.id FROM xiu_images i WHERE i.listing_id=l.id ORDER BY i.id LIMIT 1) image_id'.$base.' JOIN xiu_categories k ON k.id=l.category_id'.$verification.$condition.' AND (c.enabled=1 OR l.id IN ('.$nationwideIds.')) AND u.enabled=1 AND l.id IN ('.implode(',',$selected).')',$params);
         $map=array_column($records,null,'id');
-        foreach($selected as $id) if(isset($map[$id])) $items[]=$map[$id];
+        foreach($selected as $id) if(isset($map[$id])) $items[]=listingWithServiceScope($map[$id]);
     }
     return $paginate?compact('items','total','page','pages'):compact('items');
 }

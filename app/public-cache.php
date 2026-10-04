@@ -50,7 +50,7 @@ function invalidatePublicDataCache(): void {
     $GLOBALS['public_data_cache_memo']=[];
 }
 function publicCacheDatabaseWrite(string $sql): void {
-    if(!preg_match('/^\s*(?:INSERT(?:\s+IGNORE)?\s+INTO|REPLACE(?:\s+INTO)?|UPDATE|DELETE\s+FROM|TRUNCATE(?:\s+TABLE)?)\s+`?(xiu_(?:listings|categories|cities|districts|users|user_verifications|images|articles|settings|navigation|friend_links|repair_guides|repair_guide_categories))\b/i',$sql)) return;
+    if(!preg_match('/^\s*(?:INSERT(?:\s+IGNORE)?\s+INTO|REPLACE(?:\s+INTO)?|UPDATE|DELETE\s+FROM|TRUNCATE(?:\s+TABLE)?)\s+`?(xiu_(?:listings|categories|cities|districts|users|user_verifications|images|articles|settings|navigation|friend_links|repair_guides|repair_guide_categories|workbook_imports))\b/i',$sql)) return;
     $connection=db();
     if($connection->inTransaction()) $connection->publicCacheDirty=true;
     else invalidatePublicDataCache();

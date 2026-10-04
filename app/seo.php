@@ -150,7 +150,8 @@ function pageSeo(string $template,array $data): array {
         if(!empty($item['district_name'])) $seo['title']=seoDescription($item['title'],60).' - '.$item['city_name'].$item['district_name'].$item['category_name'].' - '.$name;
         $seo['description']=seoDescription($item['city_name'].' '.$item['category_name'].'：'.$item['title'].'。'.$item['body']);
         $seo['canonical']=absoluteUrl(listingUrl($item));
-        $crumbs[]=['name'=>'分类信息','url'=>absoluteUrl(publicPath('services'))]; $crumbs[]=['name'=>$item['city_name'],'url'=>absoluteUrl(listUrl(['city'=>$item['city_id']]))]; $crumbs[]=['name'=>$item['category_name'],'url'=>absoluteUrl(listUrl(['city'=>$item['city_id'],'category'=>$item['category_id']]))]; $crumbs[]=['name'=>$item['title'],'url'=>$seo['canonical']];
+        $serviceCity=$item['service_city_id']??$item['city_id'];
+        $crumbs[]=['name'=>'分类信息','url'=>absoluteUrl(publicPath('services'))]; $crumbs[]=['name'=>$item['city_name'],'url'=>absoluteUrl(listUrl(['city'=>$serviceCity]))]; $crumbs[]=['name'=>$item['category_name'],'url'=>absoluteUrl(listUrl(['city'=>$serviceCity,'category'=>$item['category_id']]))]; $crumbs[]=['name'=>$item['title'],'url'=>$seo['canonical']];
         if(!visibleListing($item) || $item['is_demo']) $seo['robots']='noindex, follow';
     }
     elseif($template==='articles') {

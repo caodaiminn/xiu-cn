@@ -75,6 +75,7 @@ function dispatch(): void {
     if(preg_match('#^/info/(\d+)$#',$path,$match)) {
         $item=row("SELECT l.*,k.name category_name,c.name city_name,c.slug city_slug,u.username,d.name district_name,v.type verification_type FROM xiu_listings l JOIN xiu_categories k ON k.id=l.category_id JOIN xiu_cities c ON c.id=l.city_id JOIN xiu_users u ON u.id=l.user_id LEFT JOIN xiu_districts d ON d.id=l.district_id LEFT JOIN xiu_user_verifications v ON v.user_id=l.user_id AND v.status='approved' WHERE l.id=?",[$match[1]]);
         if(!$item || (!visibleListing($item) && !currentAdmin() && (int)(currentUser()['id']??0)!==(int)$item['user_id'])) abortPage(404,'信息不存在或暂未发布。');
+        $item=listingWithServiceScope($item);
         enforceCanonical(listingUrl($item));
         render('detail',['title'=>$item['title'].' · '.siteName(),'item'=>$item,'images'=>rows('SELECT * FROM xiu_images WHERE listing_id=? ORDER BY id',[$item['id']]),'related'=>listingSearch(['category'=>$item['category_id'],'city'=>$item['city_id']],1,5)]); return;
     }
