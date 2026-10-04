@@ -4,9 +4,10 @@
  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
  <title><?= e($title) ?></title><meta name="description" content="<?= e($seo['description']) ?>"><meta name="robots" content="<?= e($seo['robots']) ?>">
  <?php if($seo['canonical']): ?><link rel="canonical" href="<?= e($seo['canonical']) ?>"><meta property="og:url" content="<?= e($seo['canonical']) ?>"><?php endif ?>
- <meta property="og:title" content="<?= e($title) ?>"><meta property="og:description" content="<?= e($seo['description']) ?>"><meta property="og:site_name" content="<?= e(siteName()) ?>"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="<?= $template==='article'?'article':'website' ?>">
+ <meta property="og:title" content="<?= e($title) ?>"><meta property="og:description" content="<?= e($seo['description']) ?>"><meta property="og:site_name" content="<?= e(siteName()) ?>"><meta property="og:locale" content="zh_CN"><meta property="og:type" content="<?= in_array($template,['article','repair-guide'],true)?'article':'website' ?>">
  <?php if($seoJson): ?><script type="application/ld+json"><?= $seoJson ?></script><?php endif ?>
  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"><link rel="stylesheet" href="/assets/style.css?v=<?= filemtime(ROOT.'/public/assets/style.css') ?>"><script src="/assets/site.js?v=<?= filemtime(ROOT.'/public/assets/site.js') ?>" defer></script>
+ <?php if(in_array($template,['listings','repair-guide','repair-guide-index'],true)): ?><link rel="stylesheet" href="/assets/repair-guides.css?v=<?= filemtime(ROOT.'/public/assets/repair-guides.css') ?>"><?php endif ?>
  <?php if($adminPage && ($section??'')==='articles'): ?>
  <link rel="stylesheet" href="/assets/vendor/quill/quill.snow.css?v=2.0.3">
  <link rel="stylesheet" href="/assets/article-editor.css?v=<?= filemtime(ROOT.'/public/assets/article-editor.css') ?>">
@@ -37,6 +38,6 @@ if($headerCity && !$headerCity['enabled']) { $headerCity=null; unset($_SESSION['
 <?php if($notice): ?><div class="notice <?= e($notice['type']) ?>" role="status"><?= e($notice['message']) ?></div><?php endif ?>
 <?php require ROOT.'/views/'.$template.'.php'; ?>
 </main>
-<?php if($adminPage || !empty($memberPage)): ?></div><?php else: ?><footer class="site-footer"><div class="container"><a class="footer-brand" href="/"><?= e(siteName()) ?></a><div><a href="/fen-lei-xin-xi/">分类信息</a><a href="/selectcity.html">选择城市</a><a href="/wei-xiu-zhi-shi-ku/">维修知识库</a><a href="/wei-xiu-bai-ke/">维修百科</a><a href="/wang-zhan-di-tu/">网站地图</a></div><?php require ROOT.'/views/friend-links.php'; ?><p>服务与需求由用户发布，请自行核实服务内容及联系方式。标有“测试信息”或“演示”的内容仅用于本地展示。</p><small>© <?= date('Y') ?> <?= e(siteName()) ?></small></div></footer><?php endif ?>
+<?php if($adminPage || !empty($memberPage)): ?></div><?php else: ?><footer class="site-footer"><div class="container"><a class="footer-brand" href="/"><?= e(siteName()) ?></a><div><a href="/fen-lei-xin-xi/">分类信息</a><a href="/selectcity.html">选择城市</a><a href="/wei-xiu-zhi-shi-ku/">维修知识库</a><a href="/wei-xiu-zhi-nan/">维修与服务指南</a><a href="/wei-xiu-bai-ke/">维修百科</a><a href="/wang-zhan-di-tu/">网站地图</a></div><?php require ROOT.'/views/friend-links.php'; ?><p>服务与需求由用户发布，请自行核实服务内容及联系方式。标有“测试信息”或“演示”的内容仅用于本地展示。</p><small>© <?= date('Y') ?> <?= e(siteName()) ?></small></div></footer><?php endif ?>
 <?= analyticsScripts() ?>
 </body></html>

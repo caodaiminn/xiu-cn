@@ -32,6 +32,7 @@ function dispatch(): void {
     }
     if(in_array($path,['/api/city-location','/change-city'],true)) { cityLocationController($path); return; }
     if(in_array($method,['GET','HEAD'],true) && sitemapController($path)) return;
+    if(repairGuideController($path)) return;
     $path=resolveSeoRoute($path);
     $GLOBALS['path']=$path;
     if(str_starts_with($path,'/dgadmin') || in_array($path,['/login','/register','/publish','/user','/logout','/user/offline'],true)) header('X-Robots-Tag: noindex, nofollow');

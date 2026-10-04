@@ -469,3 +469,21 @@ python tests/life-companion-seo-http.py
 ```
 
 2026-10-01已实际向上述收件邮箱发送1封“[五修网] 邮件通知测试”，SMTP服务器确认接收；记录保存在后台和 `reports/mail-smtp-test.json`。此结果仅确认SMTP接收，未登录收件邮箱核实送达。通过19项队列检查及17项HTTP检查，覆盖去重、回滚、修改重提、关闭通知、失败隔离、密码隐藏、重试限制、后台异步进程、认证与CSRF、私有目录不可访问及公开页缓存。其余检查使用本地替代发送器或保留测试域名，没有再次发送真实邮件；QA用户、信息与发送记录已清理。验收记录为 `tests/artifacts/mail-notifications-results.json` 和 `mail-notifications-http-results.json`，可运行 `tests/mail-notifications.php` 与 `tests/mail-notifications-http.py`；HTTP检查需临时设置 `XIU_ADMIN_PASSWORD`。源码恢复备份位于 `backup/2026-10-01-mail-notifications/`，配置后续修改前会保存加密备份，没有修改phpStudy全局配置。
+
+## 维修与服务指南（2026-10-04）
+
+公开目录 `/wei-xiu-zhi-nan/`；每个启用的维修与生活服务分类提供 5 篇问题记录、预约准备、报价核对、验收和日常维护指南。所有城市的对应分类页显示这 5 个阅读入口，指南不计入真实服务/求修记录，也不创建商家、手机号或虚构委托。
+
+同主题只保留一个详情地址 `/wei-xiu-zhi-nan/{slug}.html`。同名分类和空调品牌分类共用对应指南，目前 393 个城市、193 个分类、810 篇独立指南、965 条分类关联，覆盖 75849 个城市/分类组合。正文根据具体设备和服务类型提供沟通、检测信息准备和验收要点，不提供拆卸带电设备、结构加固等专业施工操作步骤。数据结构为 `database/repair-guides.sql`，内容整理入口 `app/repair-guide-content.php`，发布读取逻辑 `app/repair-guides.php`；数据库保存每篇文章和关联关系。
+
+导入先预览，`--apply` 才写入并备份原指南数据。重复执行不会重复生成或覆盖现有指南。停用分类或上级分类后，阅读入口与站点地图隐藏相应内容。新建分类后需再运行导入来建立 5 条关联。
+
+```powershell
+& 'D:/phpstudy_pro/Extensions/php/php8.0.2nts/php.exe' scripts/add-repair-guides.php
+& 'D:/phpstudy_pro/Extensions/php/php8.0.2nts/php.exe' scripts/add-repair-guides.php --apply
+& 'D:/phpstudy_pro/Extensions/php/php8.0.2nts/php.exe' tests/repair-guides.php
+```
+
+详情有标题、摘要、规范链接、Article 和面包屑结构化数据，XML 地图入口 `/sitemap-zhi-nan-1.xml` 已加入 `/sitemap.xml`。不为每个城市复制相同正文；没有真实服务记录的城市分类页仍保持 `noindex, follow`，可通过页面链接发现正式指南，避免重复的空服务列表进入索引。SEO 标记支持抓取和理解，不保证搜索引擎实际收录或排名。
+
+2026-10-04已发布至 https://www.5pz.cn ，16 个源码文件摘要核验一致，810 篇指南及 965 条关联导入成功，原 6 条真实信息、账号、分类、文章、配置和友情链接的数据核验保持完整。线上更新前数据库及相关源码备份 `/www/backup/2026-10-04-repair-guides/`；本地源码恢复备份 `backup/2026-10-04-repair-guides/`。验收材料 `reports/guides/2026-10-04/`，部署记录 `reports/deploy/2026-10-04-repair-guides/`。

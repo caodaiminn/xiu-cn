@@ -128,6 +128,19 @@ function pageSeo(string $template,array $data): array {
         $pageType='CollectionPage';
     }
     elseif($template==='cities') { $seo['title']='全国城市选择 - '.$name; $seo['description']='在'.$name.'选择所在城市，按省份浏览全国城市与地区，查找当地维修服务和求修需求。'; $crumbs[]=['name'=>'选择城市','url'=>absoluteUrl(publicPath('cities'))]; $pageType='CollectionPage'; }
+    elseif($template==='repair-guide-index') {
+        $seo['title']='维修与服务指南 - '.$name;
+        $seo['description']='按维修分类阅读问题记录、报修准备、报价核对、完工验收和日常维护指南，查找当地服务前先了解需要确认的事项。';
+        $crumbs[]=['name'=>'维修与服务指南','url'=>absoluteUrl('/wei-xiu-zhi-nan/')];$pageType='CollectionPage';
+    }
+    elseif($template==='repair-guide') {
+        $guide=$data['guide'];$seo['title']=$guide['title'].' - '.$name;
+        $seo['description']=seoDescription($guide['summary']);$seo['canonical']=absoluteUrl(repairGuideUrl($guide));
+        $crumbs[]=['name'=>'维修与服务指南','url'=>absoluteUrl('/wei-xiu-zhi-nan/')];
+        $crumbs[]=['name'=>$guide['category_name'],'url'=>absoluteUrl(listUrl(['category'=>$guide['category_id']]))];
+        $crumbs[]=['name'=>$guide['title'],'url'=>$seo['canonical']];$pageType='Article';
+        $seo['schema'][]=['@context'=>'https://schema.org','@type'=>'Article','headline'=>$guide['title'],'description'=>$seo['description'],'mainEntityOfPage'=>$seo['canonical'],'inLanguage'=>'zh-CN','datePublished'=>date(DATE_ATOM,strtotime($guide['created_at'])),'dateModified'=>date(DATE_ATOM,strtotime($guide['updated_at'])),'author'=>['@type'=>'Organization','name'=>$name.'内容整理'],'publisher'=>['@type'=>'Organization','name'=>$name,'url'=>siteUrl()]];
+    }
     elseif($template==='detail') {
         $item=$data['item']; $seo['title']=seoDescription($item['title'],60).' - '.$item['city_name'].$item['category_name'].' - '.$name;
         if(!empty($item['district_name'])) $seo['title']=seoDescription($item['title'],60).' - '.$item['city_name'].$item['district_name'].$item['category_name'].' - '.$name;
@@ -161,7 +174,7 @@ function pageSeo(string $template,array $data): array {
     else $seo['robots']='noindex, nofollow';
     if($_SERVER['REQUEST_METHOD']==='POST' || http_response_code()>=400) { $seo['robots']='noindex, nofollow'; if(http_response_code()>=400) $seo['canonical']=null; }
     if($seo['canonical'] && $seo['robots']==='index, follow, max-image-preview:large') {
-        $seo['schema'][]=['@context'=>'https://schema.org','@type'=>$pageType,'name'=>$seo['title'],'description'=>$seo['description'],'url'=>$seo['canonical'],'inLanguage'=>'zh-CN'];
+        if($template!=='repair-guide') $seo['schema'][]=['@context'=>'https://schema.org','@type'=>$pageType,'name'=>$seo['title'],'description'=>$seo['description'],'url'=>$seo['canonical'],'inLanguage'=>'zh-CN'];
         if($template==='home') $seo['schema'][]=['@context'=>'https://schema.org','@type'=>'WebSite','name'=>$name,'url'=>absoluteUrl('/'),'inLanguage'=>'zh-CN'];
         if(count($crumbs)>1) $seo['schema'][]=['@context'=>'https://schema.org','@type'=>'BreadcrumbList','itemListElement'=>array_map(fn($item,$index)=>['@type'=>'ListItem','position'=>$index+1,'name'=>$item['name'],'item'=>$item['url']],$crumbs,array_keys($crumbs))];
     }
