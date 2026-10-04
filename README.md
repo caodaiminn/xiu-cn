@@ -325,7 +325,7 @@ Nginx 已配置 `client_max_body_size 32m`、PHP 上传 5MB/总提交 32MB、前
 
 ## 友情链接
 
-后台 `/dgadmin/index.php?section=friendlinks`（侧栏“友情链接”）支持新增、编辑网站名称和HTTP/HTTPS地址、数字排序或上移/下移、启停、删除及设置新窗口/当前窗口。已启用链接在公开页面页脚按排序展示；未配置时隐藏整个友情链接区域。新窗口使用 `noopener`，名称和地址经过转义，不默认加入nofollow。保存后立即使公开数据缓存失效；后台需管理员和CSRF验证。写入前保存完整友情链接快照至 `backup/{日期}-friend-links/records/`，操作采用数据库事务。
+后台 `/dgadmin/index.php?section=friendlinks`（侧栏“友情链接”）支持新增、编辑网站名称和HTTP/HTTPS地址、数字排序或上移/下移、启停、删除及设置新窗口/当前窗口。已启用链接仅在首页底部按排序展示，其他公开页面不显示友情链接；未配置时隐藏整个友情链接区域。新窗口使用 `noopener`，名称和地址经过转义，不默认加入nofollow。保存后立即使公开数据缓存失效；后台需管理员和CSRF验证。写入前保存完整友情链接快照至 `backup/{日期}-friend-links/records/`，操作采用数据库事务。
 
 新表位于 `database/friend-links.sql`，初始化包含该表；现有站点升级执行 `php scripts/migrate-friend-links.php`，先备份既有结构与记录，不添加默认合作网站。通过 `node tests/friend-links.cjs` 的30项新增、编辑、排序、隐藏、删除、即时更新、URL校验、CSRF、权限、文字转义及1440/390/320px布局检查，模拟链接和会话已清理。结果为 `tests/artifacts/friend-links-results.json`，源码恢复备份为 `backup/2026-10-02-friend-links/`。本次已在本机生效，线上仍待部署。
 
