@@ -121,22 +121,23 @@ try {
 
 ## 伪静态 URL 与 SEO
 
-Nginx 的现有 `try_files` 和 Apache 的 `public/.htaccess` 将公开页面交给统一 PHP 入口；URL 中无需出现 PHP 文件名。目录、分类、城市使用全拼，词间使用短横线。详情文件名按本次修改要求缩短，使用拼音或首拼加随机数字。
+Nginx 的现有 `try_files` 和 Apache 的 `public/.htaccess` 将公开页面交给统一 PHP 入口；URL 中无需出现 PHP 文件名。城市、分类和区域标识在24个字符以内保留全拼，超过24个字符改为最多12个拼音首字母加记录编号；编号区分同首拼项目。首拼取自已有的固定 `seo_slug`，改名称不会改变地址。详情文件名使用拼音或首拼加随机数字。
 
 | 页面 | URL 规则 |
 | --- | --- |
 | 维修分类 | `/fen-lei-xin-xi/kong-tiao-wei-xiu/` |
 | 城市 | `/hang-zhou/` |
 | 城市＋分类 | `/hang-zhou/kong-tiao-wei-xiu/` |
-| 服务 / 求修信息筛选 | 分类或城市路径后追加 `/lei-xing/wei-xiu-fu-wu/` 或 `/lei-xing/qiu-xiu-xu-qiu/` |
-| 分类分页 | 对应路径后追加 `/di-2-ye/`，第1页不追加 |
+| 城市区域 | 城市或城市＋分类路径后追加 `/qy/tian-he/` |
+| 服务 / 求修信息筛选 | 分类或城市路径后追加 `/lx/wxfw/` 或 `/lx/qxxq/` |
+| 分类或文章分页 | 对应路径后追加 `/p/2/`，第1页不追加 |
 | 信息详情 | `/wei-xiu-xin-xi/{short_slug}.html` |
 | 知识文章 | `/wei-xiu-zhi-shi-ku/{short_slug}.html` |
 | 百科详情 | `/wei-xiu-bai-ke/{short_slug}.html` |
 
 详情的 `short_slug` 最多12个 ASCII 字符，不包含目录和 `.html`：最多8个拼音字母或汉字拼音首字母，加4位随机数字。短名称能够完整放入8个字母时采用全拼；长标题采用首拼。数据库唯一索引防止重号，重号自动重新生成。分类、城市、详情标识生成后保持固定，改名称或标题不会改变地址。
 
-旧 `/services/`、`/city/hangzhou/`、`/info/28/`、`/baixiuquan/1.html`、`/baike/5.html` 及已生成过的“长标题拼音＋ID”地址，均保留301兼容跳转。页面内链接、面包屑、canonical、分享地址和站点地图使用新地址。大小写、缺少结尾斜线、跟踪参数、第1页参数等统一跳转到规范地址；越界分页、无效分类和不存在的内容返回真实404。
+旧完整拼音的城市、分类、区域地址，以及 `/qu-yu/`、`/lei-xing/wei-xiu-fu-wu/`、`/lei-xing/qiu-xiu-xu-qiu/`、`/di-2-ye/` 路径段均继续解析，并301到对应短地址。旧 `/services/`、`/city/hangzhou/`、`/info/28/`、`/baixiuquan/1.html`、`/baike/5.html` 及已生成过的“长标题拼音＋ID”地址也保留301兼容跳转。页面内链接、面包屑、canonical、分享地址和站点地图使用新地址。大小写、缺少结尾斜线、跟踪参数、第1页参数等统一跳转到规范地址；越界分页、无效分类和不存在的内容返回真实404。此次列表短地址调整不改数据库字段或详情地址，无需执行数据迁移。验收使用 `tests/short-collection-urls.php` 和 `tests/short-collection-urls-http.py`。
 
 每个公开页面提供标题、描述、一个主标题、canonical、robots、Open Graph；可收录页面提供 JSON-LD，包含页面、网站或面包屑信息，正式知识/百科文章另有 Article 数据。分页具有自己的规范地址、页码标题和描述。搜索结果、空列表、演示详情、待审核/下架预览、登录注册、个人中心和后台不进入索引；正式审核通过的信息和正式发布的文章可以进入索引。停止公开的内容不再出现在 XML 地图中。
 
@@ -185,7 +186,7 @@ Nginx 已配置 `client_max_body_size 32m`、PHP 上传 5MB/总提交 32MB、前
 示例：
 
 - 广州空调清洗：<http://www.xiu.cn/guang-zhou/kong-tiao-qing-xi/>
-- 广州天河空调清洗：<http://www.xiu.cn/guang-zhou/kong-tiao-qing-xi/qu-yu/tian-he/>
+- 广州天河空调清洗：<http://www.xiu.cn/guang-zhou/kong-tiao-qing-xi/qy/tian-he/>
 - 分类后台：<http://www.xiu.cn/dgadmin/index.php?section=categories>
 - 区域后台：<http://www.xiu.cn/dgadmin/index.php?section=districts>
 
@@ -238,7 +239,7 @@ Nginx 已配置 `client_max_body_size 32m`、PHP 上传 5MB/总提交 32MB、前
 
 城市入口改为 `/selectcity.html`，主导航、页脚及“全部城市”均指向这个全国城市选择单页。按34个省级地区展示393个城市及地区，包含热门城市、省份快速定位和中文、全拼、首拼查找。城市链接由PHP直接输出；关闭JavaScript后仍可浏览和点击全部城市。全国分类导航仅列出热门城市及“全部城市”入口，完整城市目录集中在选择页。
 
-城市列表改用根路径，例如上海 `/shang-hai/`，广州空调清洗 `/guang-zhou/kong-tiao-qing-xi/`，广州天河空调清洗 `/guang-zhou/kong-tiao-qing-xi/qu-yu/tian-he/`。分类、区域、信息类型、关键词和分页继续按原规则组合。旧 `/cheng-shi-fu-wu/`、`/cities/`、`/selectcity.html` 301到选择页；旧 `/cheng-shi-fu-wu/{城市}/...` 和 `/city/{旧标识}/` 301到对应新地址。公开链接、面包屑、canonical、OG地址及站点地图均使用新地址；管理、静态资源和原有内容路径保留各自入口。
+城市列表改用根路径，例如上海 `/shang-hai/`，广州空调清洗 `/guang-zhou/kong-tiao-qing-xi/`，广州天河空调清洗 `/guang-zhou/kong-tiao-qing-xi/qy/tian-he/`。分类、区域、信息类型、关键词和分页按上方短地址规则组合。旧 `/cheng-shi-fu-wu/`、`/cities/`、`/xuan-ze-cheng-shi.html` 301到选择页；旧 `/cheng-shi-fu-wu/{城市}/...` 和 `/city/{旧标识}/` 301到对应新地址。公开链接、面包屑、canonical、OG地址及站点地图均使用新地址；管理、静态资源和原有内容路径保留各自入口。
 
 城市目录基础数据来自 [Administrative-divisions-of-China](https://github.com/modood/Administrative-divisions-of-China)，固定版本 `c49d495b40ac73eb1a66f6eeae5f8fd10696f035`，大陆基础数据日期为2023-06-30。涵盖地级服务地区、直辖市、省直辖县级地区，并补充台湾城市/县及香港、澳门服务区域；不是全部县、区、乡镇清单，也不宣称为2026年最新行政区划。数据来源与范围记录于 `app/data/nationwide-cities.json`。台湾名称参照[地方制度资料](https://www.moi.gov.tw/cp.aspx?n=674)。后台可继续维护城市名称、排序、热门和启停。
 

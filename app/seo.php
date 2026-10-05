@@ -12,24 +12,48 @@ function seoRecord(string $table,int $id): ?array {
     return $cache[$key];
 }
 function recordSlug(array $record): string { return !empty($record['seo_slug'])?$record['seo_slug']:pinyinSlug($record['name']??$record['title']); }
+/** Use the persisted spelling so renaming a record never changes its short address. */
+function collectionSlug(array $record): string {
+    $slug=recordSlug($record);
+    if(strlen($slug)<=24) return $slug;
+    $initials=implode('',array_map(fn($word)=>ctype_digit($word)?'':($word[0]??''),explode('-',$slug)));
+    $initials=preg_replace('/^[^a-z]+/','',$initials);
+    return substr($initials?:'xx',0,12).'-'.(int)$record['id'];
+}
+/** Accept both the original spelling and the verified initials plus record ID. */
+function collectionRecord(string $table,string $slug,array $scope=[]): ?array {
+    if(!in_array($table,['xiu_categories','xiu_cities','xiu_districts'],true)) throw new LogicException('Invalid collection table');
+    $clause='';$params=[$slug];
+    foreach($scope as $column=>$value) {
+        if(!in_array($column,['kind','city_id','enabled'],true)) throw new LogicException('Invalid collection scope');
+        $clause.=' AND '.$column.'=?';$params[]=$value;
+    }
+    $record=row('SELECT * FROM '.$table.' WHERE seo_slug=?'.$clause,$params);
+    if($record) return $record;
+    if(!preg_match('/^[a-z][a-z0-9]{0,11}-([1-9][0-9]{0,8})$/',$slug,$match)) return null;
+    $record=seoRecord($table,(int)$match[1]);
+    if(!$record || collectionSlug($record)!==$slug) return null;
+    foreach($scope as $column=>$value) if((string)$record[$column] !== (string)$value) return null;
+    return $record;
+}
 function detailSlug(string $table,array $record): string { return $record['short_slug']??seoRecord($table,(int)$record['id'])['short_slug']??throw new LogicException('Run the SEO migration first.'); }
 function listingUrl(array $listing): string { return '/wei-xiu-xin-xi/'.detailSlug('xiu_listings',$listing).'.html'; }
-function cityUrl(array $city): string { return '/'.recordSlug($city).'/'; }
+function cityUrl(array $city): string { return '/'.collectionSlug($city).'/'; }
 function listUrl(array $filters=[],int $page=1): string {
     $city=!empty($filters['city'])?seoRecord('xiu_cities',(int)$filters['city']):null;
     $category=!empty($filters['category'])?seoRecord('xiu_categories',(int)$filters['category']):null;
     $url=$city?cityUrl($city):publicPath('services');
-    if($category) $url.=recordSlug($category).'/';
-    if(!empty($filters['district'])) { $district=seoRecord('xiu_districts',(int)$filters['district']); if($district) $url.='qu-yu/'.recordSlug($district).'/'; }
-    if(!empty($filters['type']) && in_array($filters['type'],['service','request'],true)) $url.='lei-xing/'.($filters['type']==='service'?'wei-xiu-fu-wu':'qiu-xiu-xu-qiu').'/';
-    if($page>1) $url.='di-'.$page.'-ye/';
+    if($category) $url.=collectionSlug($category).'/';
+    if(!empty($filters['district'])) { $district=seoRecord('xiu_districts',(int)$filters['district']); if($district) $url.='qy/'.collectionSlug($district).'/'; }
+    if(!empty($filters['type']) && in_array($filters['type'],['service','request'],true)) $url.='lx/'.($filters['type']==='service'?'wxfw':'qxxq').'/';
+    if($page>1) $url.='p/'.$page.'/';
     $keyword=trim(mb_substr((string)($filters['q']??''),0,100));
     return $url.($keyword!==''?'?q='.rawurlencode($keyword):'');
 }
 function articleCollectionUrl(string $kind,array $filters=[],int $page=1): string {
     $url=publicPath($kind); $category=!empty($filters['category'])?seoRecord('xiu_categories',(int)$filters['category']):null;
-    if($category) $url.=recordSlug($category).'/';
-    if($page>1) $url.='di-'.$page.'-ye/';
+    if($category) $url.=collectionSlug($category).'/';
+    if($page>1) $url.='p/'.$page.'/';
     $keyword=trim(mb_substr((string)($filters['q']??''),0,100));
     return $url.($keyword!==''?'?q='.rawurlencode($keyword):'');
 }
@@ -75,26 +99,27 @@ function resolveSeoRoute(string $path): string {
     // Interpret a city at the root using the existing city/category/district parser.
     $first=explode('/',ltrim($path,'/'))[0];
     $reserved=['dgadmin','assets','media','app','storage','backup','scripts','tests','database','services','cities','city','info','baixiuquan','baike','login','register','publish','user','logout','html-sitemap','fen-lei-xin-xi','cheng-shi-fu-wu','wei-xiu-xin-xi','wei-xiu-zhi-shi-ku','wei-xiu-bai-ke','deng-lu','zhu-ce','fa-bu-xin-xi','yong-hu-zhong-xin','tui-chu','wang-zhan-di-tu'];
-    if(preg_match('/^[a-z][a-z0-9-]*$/',$first) && !in_array($first,$reserved,true) && scalar('SELECT id FROM xiu_cities WHERE seo_slug=?',[$first])) $path='/cheng-shi-fu-wu'.$path;
+    if(preg_match('/^[a-z][a-z0-9-]*$/',$first) && !in_array($first,$reserved,true) && collectionRecord('xiu_cities',$first)) $path='/cheng-shi-fu-wu'.$path;
     if(preg_match('#^/(fen-lei-xin-xi|cheng-shi-fu-wu|wei-xiu-zhi-shi-ku|wei-xiu-bai-ke)(?:/(.*))?$#',$path,$match)) {
         $base=$match[1]; $tail=$match[2]??''; $parts=$tail===''?[]:explode('/',$tail);
         if($parts && preg_match('/^di-([0-9]+)-ye$/',end($parts),$page)) { $routeFilters['page']=positiveId($page[1],false); array_pop($parts); }
+        elseif(count($parts)>=2 && $parts[count($parts)-2]==='p') { $routeFilters['page']=positiveId(array_pop($parts),false); array_pop($parts); }
         $kind=in_array($base,['wei-xiu-zhi-shi-ku','wei-xiu-bai-ke'],true)?($base==='wei-xiu-bai-ke'?'encyclopedia':'knowledge'):'service';
-        if($kind==='service' && count($parts)>=2 && $parts[count($parts)-2]==='lei-xing') {
-            $type=array_pop($parts); array_pop($parts); $routeFilters['type']=['wei-xiu-fu-wu'=>'service','qiu-xiu-xu-qiu'=>'request'][$type]??'';
+        if($kind==='service' && count($parts)>=2 && in_array($parts[count($parts)-2],['lei-xing','lx'],true)) {
+            $type=array_pop($parts); array_pop($parts); $routeFilters['type']=['wei-xiu-fu-wu'=>'service','qiu-xiu-xu-qiu'=>'request','wxfw'=>'service','qxxq'=>'request'][$type]??'';
             if(!$routeFilters['type']) abortPage(404,'信息类型不存在。');
         }
         $districtSlug=null;
-        if($kind==='service' && count($parts)>=2 && $parts[count($parts)-2]==='qu-yu') { $districtSlug=array_pop($parts); array_pop($parts); if($base!=='cheng-shi-fu-wu') abortPage(404,'请选择区域所属城市。'); }
+        if($kind==='service' && count($parts)>=2 && in_array($parts[count($parts)-2],['qu-yu','qy'],true)) { $districtSlug=array_pop($parts); array_pop($parts); if($base!=='cheng-shi-fu-wu') abortPage(404,'请选择区域所属城市。'); }
         if($base==='cheng-shi-fu-wu') {
             if(!$parts) abortPage(404,'城市地址无效。');
-            $slug=array_shift($parts); $city=row('SELECT * FROM xiu_cities WHERE seo_slug=? AND enabled=1',[$slug]);
+            $slug=array_shift($parts); $city=collectionRecord('xiu_cities',$slug,['enabled'=>1]);
             if(!$city) abortPage(404,'这个城市暂未开通。'); $routeFilters['city']=(int)$city['id'];
-            if($districtSlug!==null) { $district=row('SELECT id FROM xiu_districts WHERE city_id=? AND seo_slug=? AND enabled=1',[$city['id'],$districtSlug]); if(!$district) abortPage(404,'这个区域暂未开通。'); $routeFilters['district']=(int)$district['id']; }
+            if($districtSlug!==null) { $district=collectionRecord('xiu_districts',$districtSlug,['city_id'=>$city['id'],'enabled'=>1]); if(!$district) abortPage(404,'这个区域暂未开通。'); $routeFilters['district']=(int)$district['id']; }
         }
         if($parts) {
             if(count($parts)!==1) abortPage(404,'分类地址不存在。');
-            $category=row('SELECT * FROM xiu_categories WHERE seo_slug=? AND kind=?',[$parts[0],$kind]);
+            $category=collectionRecord('xiu_categories',$parts[0],['kind'=>$kind]);
             if(!$category || !in_array((int)$category['id'],categoryIds($kind),true)) abortPage(404,'这个分类暂未开通。');
             $routeFilters['category']=(int)$category['id'];
         }

@@ -72,7 +72,7 @@ $excluded=[]; if($record) { $excluded=[(int)$record['id']]; foreach($flat as $it
             <label>分类导航展示<select name="show_in_filter"><option value="1" <?= (int)$v('show_in_filter',1)===1?'selected':'' ?>>显示链接</option><option value="0" <?= (int)$v('show_in_filter',1)===0?'selected':'' ?>>隐藏链接</option></select><small class="field-help">隐藏导航不会下架已发布内容。</small></label>
             <label>状态<select name="enabled"><option value="1" <?= (int)$v('enabled',1)===1?'selected':'' ?>>启用</option><option value="0" <?= (int)$v('enabled',1)===0?'selected':'' ?>>停用</option></select><small class="field-help">停用后，该分类、子分类及其内容暂停展示。</small></label>
         </div>
-        <details class="category-advanced"><summary>高级设置：兼容旧地址</summary><label>兼容标识<input name="slug" value="<?= e($v('slug')) ?>" pattern="[a-z][a-z0-9-]{0,79}" maxlength="80" placeholder="留空自动生成"><small class="field-help">仅用于兼容旧地址；留空自动生成。公开页面的全拼地址由系统生成，修改名称后仍保持原地址。</small></label></details>
+        <details class="category-advanced"><summary>高级设置：兼容旧地址</summary><label>兼容标识<input name="slug" value="<?= e($v('slug')) ?>" pattern="[a-z][a-z0-9-]{0,79}" maxlength="80" placeholder="留空自动生成"><small class="field-help">仅用于兼容旧地址；留空自动生成。公开地址由系统生成；超过24个字符使用首拼加编号，修改名称后保持固定。</small></label></details>
         <div class="form-actions"><button class="button">保存分类</button><a class="text-link" href="<?= e($categoryLink(['category'=>$selected['id']??0])) ?>">取消</a></div>
     </form>
 </section>
